@@ -1,85 +1,70 @@
 package edu.asu.remindmenow;
 
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
 
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.FacebookSdk;
+import com.facebook.login.LoginManager;
+import com.facebook.login.LoginResult;
+import com.facebook.login.widget.LoginButton;
+
 import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity {
 
 
-    EditText textView;
-    EditText endTextView;
+
+
+    CallbackManager callbackManager;
+
+//    @Override
+//    protected void onCreate(Bundle savedInstanceState) {
+//        super.onCreate(savedInstanceState);
+//        setContentView(R.layout.activity_login_fb);
+//    }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_user_reminder);
+        FacebookSdk.sdkInitialize(this.getApplicationContext());
+        callbackManager = CallbackManager.Factory.create();
+        setContentView(R.layout.activity_login_fb);
 
-        textView = (EditText)findViewById(R.id.dateTextView);
-        final Calendar myCalendar = Calendar.getInstance();
+        LoginButton btn = (LoginButton)findViewById(R.id.login_button);
+        btn.setReadPermissions("user_friends");
+        LoginManager.getInstance().registerCallback(callbackManager,
+                new FacebookCallback<LoginResult>() {
+                    @Override
+                    public void onSuccess(LoginResult loginResult) {
+                        System.out.println("On sucess");
+                        Intent intent=new Intent(MainActivity.this, HomeActivity.class);
+                        startActivity(intent);
+                    }
 
-        final DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onCancel() {
+                        // App code
+                    }
 
-            @Override
-            public void onDateSet(DatePicker view, int year, int monthOfYear,
-                                  int dayOfMonth) {
-                // TODO Auto-generated method stub
-                myCalendar.set(Calendar.YEAR, year);
-                myCalendar.set(Calendar.MONTH, monthOfYear);
-                myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                textView.setText(monthOfYear+"/"+dayOfMonth+"/"+year);
-            }
+                    @Override
+                    public void onError(FacebookException exception) {
+                        System.out.println("On error");
+                    }
 
-        };
-
-        textView.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                // TODO Auto-generated method stub
-                System.out.println("Inside onclick");
-                new DatePickerDialog(MainActivity.this, date, myCalendar
-                        .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
-                        myCalendar.get(Calendar.DAY_OF_MONTH)).show();
-            }
-        });
-
-
-        endTextView = (EditText)findViewById(R.id.endDateTextView);
-        final Calendar myEndCalendar = Calendar.getInstance();
-
-        final DatePickerDialog.OnDateSetListener endDate = new DatePickerDialog.OnDateSetListener() {
-
-            @Override
-            public void onDateSet(DatePicker view, int year, int monthOfYear,
-                                  int dayOfMonth) {
-                // TODO Auto-generated method stub
-                myCalendar.set(Calendar.YEAR, year);
-                myCalendar.set(Calendar.MONTH, monthOfYear);
-                myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                endTextView.setText(monthOfYear+"/"+dayOfMonth+"/"+year);
-            }
-
-        };
-
-        endTextView.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                // TODO Auto-generated method stub
-                System.out.println("Inside onclick");
-                new DatePickerDialog(MainActivity.this, endDate, myEndCalendar
-                        .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
-                        myEndCalendar.get(Calendar.DAY_OF_MONTH)).show();
-            }
-        });
-
-
+                });
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        callbackManager.onActivityResult(requestCode, resultCode, data);
+    }
 }

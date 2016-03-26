@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#D1D7BF">
+
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/editText"
+        android:hint="Title"
+        android:textStyle="italic"
+        android:textSize="45dp" />
+
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/linearLayout"
+        android:gravity="center"
+        android:background="#3E4039"
+        android:paddingTop="25dp"
+        android:paddingBottom="25dp"
+        android:layout_centerVertical="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/editText2"
+            android:textStyle="bold"
+            android:hint="Add Location"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:textSize="30dp"
+            android:textColor="#ffffff"
+            android:textColorHint="#D1D7BF" />
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:focusable="false"
+                android:id="@+id/dateTextView"
+                android:hint="Start Date"
+                android:textStyle="bold"
+                android:layout_below="@+id/editText2"
+                android:layout_centerHorizontal="true"
+                android:textSize="30dp"
+                android:textColor="#ffffff"
+                android:textColorHint="#D1D7BF"
+                android:paddingLeft="30dp" />
+
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:focusable="false"
+                android:id="@+id/timeTextView"
+                android:hint="hh:ss"
+                android:textStyle="bold|italic"
+                android:textSize="30dp"
+                android:textColor="#ffffff"
+                android:textColorHint="#D1D7BF"
+                android:layout_weight="0.64"
+                android:gravity="right"
+                android:paddingRight="30dp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:focusable="false"
+                android:id="@+id/endDateTextView"
+                android:hint="End Date"
+                android:textStyle="bold"
+                android:layout_above="@+id/button"
+                android:layout_alignLeft="@+id/button"
+                android:layout_alignStart="@+id/button"
+                android:textSize="30dp"
+                android:textColor="#ffffff"
+                android:textColorHint="#D1D7BF"
+                android:paddingLeft="30dp" />
+
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:focusable="false"
+                android:id="@+id/endTimeTextView"
+                android:hint="hh:ss"
+                android:textStyle="bold|italic"
+                android:textSize="30dp"
+                android:textColor="#ffffff"
+                android:textColorHint="#D1D7BF"
+                android:layout_weight="1"
+                android:gravity="right"
+                android:paddingRight="30dp" />
+
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <!--<Button-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:text="Save"-->
+        <!--android:id="@+id/button"-->
+        <!--android:background="@drawable/button_style"-->
+        <!--android:textColor="#D1D7BF"-->
+        <!--android:layout_gravity="bottom|center_horizontal"-->
+        <!--android:layout_alignParentBottom="true"-->
+        <!--android:layout_centerHorizontal="true"-->
+        <!--android:layout_marginBottom="59dp"/>-->
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/save_button"
+        android:background="@drawable/save2"
+        android:layout_gravity="center_horizontal"
+        android:src="#4a4646"
+        android:layout_below="@+id/linearLayout"
+        android:layout_centerHorizontal="true" />
+
+</RelativeLayout>

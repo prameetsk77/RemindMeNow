@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#3E4039"><![CDATA[
+    android:weightSum="1">
+
+    ]]>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageButton2"
+        android:background="@drawable/map_icon_1"
+        android:layout_gravity="center_horizontal"
+        android:src="#4a4646"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:onClick="mapIconClicked"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageButton1"
+        android:background="@drawable/user_icon_1"
+        android:layout_gravity="center_horizontal"
+        android:src="#4a4646"
+        android:onClick="userIconClicked"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageButton3"
+        android:background="@drawable/home_icon_1"
+        android:layout_gravity="center_horizontal"
+        android:src="#4a4646"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:onClick="zoneIconClicked"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Zone Reminder"
+        android:id="@+id/textView"
+        android:textColor="#D1D7BF"
+        android:textSize="40dp"
+        android:textStyle="bold"
+        android:layout_alignTop="@+id/imageButton3"
+        android:layout_toRightOf="@+id/imageButton3"
+        android:layout_toEndOf="@+id/imageButton3"
+        android:layout_marginLeft="64dp"
+        android:layout_marginStart="64dp"
+        android:onClick="zoneIconClicked"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Location Reminder"
+        android:id="@+id/textView2"
+        android:textColor="#D1D7BF"
+        android:textSize="40dp"
+        android:textStyle="bold"
+        android:layout_alignBottom="@+id/imageButton2"
+        android:layout_toLeftOf="@+id/imageButton2"
+        android:layout_toStartOf="@+id/imageButton2"
+        android:layout_marginLeft="15dp"
+        android:onClick="mapIconClicked"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Friend Reminder"
+        android:id="@+id/textView3"
+        android:textColor="#D1D7BF"
+        android:textSize="40dp"
+        android:textStyle="bold"
+        android:layout_alignBottom="@+id/imageButton1"
+        android:layout_toRightOf="@+id/imageButton1"
+        android:layout_toEndOf="@+id/imageButton1"
+        android:onClick="userIconClicked"
+        />
+
+</RelativeLayout>

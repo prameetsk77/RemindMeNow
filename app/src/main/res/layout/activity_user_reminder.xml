@@ -9,6 +9,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/editText"
+
             android:hint="Title"
             android:textStyle="italic"
             android:textSize="45dp" />
@@ -27,10 +28,10 @@
         android:paddingTop="25dp"
         android:paddingBottom="25dp">
 
-    <EditText
+    <AutoCompleteTextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/editText2"
+        android:id="@+id/addaFriendTV"
         android:textStyle="bold"
         android:hint="Add a Friend"
         android:layout_centerVertical="true"
@@ -68,16 +69,25 @@
 
     </LinearLayout>
 
+    <!--<Button-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:text="Save"-->
+        <!--android:id="@+id/button"-->
+        <!--android:background="@drawable/button_style"-->
+        <!--android:textColor="#D1D7BF"-->
+        <!--android:layout_gravity="bottom|center_horizontal"-->
+        <!--android:layout_alignParentBottom="true"-->
+        <!--android:layout_centerHorizontal="true"-->
+        <!--android:layout_marginBottom="59dp"/>-->
+
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Save"
-        android:id="@+id/button"
-        android:background="#bdb8b1"
-        android:textColor="#020202"
-        android:layout_gravity="bottom|center_horizontal"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="59dp" />
-
+        android:id="@+id/save_button"
+        android:background="@drawable/save2"
+        android:layout_gravity="center_horizontal"
+        android:src="#4a4646"
+        android:layout_below="@+id/linearLayout"
+        android:layout_centerHorizontal="true" />
 </RelativeLayout>

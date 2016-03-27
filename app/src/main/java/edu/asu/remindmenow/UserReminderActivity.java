@@ -23,13 +23,17 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import edu.asu.remindmenow.models.UserFriendList;
+import edu.asu.remindmenow.models.UserReminder;
+
 public class UserReminderActivity extends AppCompatActivity {
 
 
     EditText textView;
     EditText endTextView;
     AutoCompleteTextView addaFriend;
-    List<String> friendDataList=new ArrayList<String>();
+
+    UserFriendList userFriendList =new UserFriendList();
 
     protected  void fetchFriendList(){
         new GraphRequest(
@@ -42,14 +46,17 @@ public class UserReminderActivity extends AppCompatActivity {
                         try {
                             Log.i("user reminder", "in on completed for add fb friend " + response.getJSONArray());
                             JSONArray friendList=response.getJSONObject().getJSONArray("data");
+
+
                             for (int i=0; i<friendList.length();i++){
                                     JSONObject friendData=friendList.getJSONObject(i);
-                                    friendDataList.add(friendData.getString("name"));
-//                                  String friendId=friendData.get("id");
+
+                                Log.i("FB User Reminder", friendData.getString("id"));
+                                userFriendList.setFriend(friendData.getString("name"),friendData.getString("id"));
 
                             }
                             ArrayAdapter<String> adapter = new ArrayAdapter<String>(UserReminderActivity.this,
-                                    android.R.layout.simple_dropdown_item_1line, friendDataList);
+                                    android.R.layout.simple_dropdown_item_1line, userFriendList.getFriendName());
                             addaFriend.setAdapter(adapter);
                         }
                         catch (JSONException e) {
@@ -65,15 +72,6 @@ public class UserReminderActivity extends AppCompatActivity {
         setContentView(R.layout.activity_user_reminder);
         fetchFriendList();
         addaFriend=(AutoCompleteTextView)findViewById(R.id.addaFriendTV);
-
-
-//        String[] COUNTRIES = new String[] {
-//                "Belgium", "France", "Italy", "Germany", "Spain"
-//        };
-//        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-//                android.R.layout.simple_dropdown_item_1line, COUNTRIES);
-//
-//        addaFriend.setAdapter(adapter);
 
 
         textView = (EditText)findViewById(R.id.dateTextView);
@@ -137,6 +135,23 @@ public class UserReminderActivity extends AppCompatActivity {
         });
 
 
+    }
+
+    public void saveUserClicked(View v){
+
+        UserReminder userReminder=new UserReminder();
+        userReminder.setStartDate(textView.getText().toString());
+        userReminder.setEndDate(endTextView.getText().toString());
+        String fbName=addaFriend.getText().toString();
+        userReminder.setFriendName(fbName);
+        int i=0;
+        for (i=0; i<userFriendList.getFriendName().size();i++) {
+
+            if (userFriendList.getFriendName().get(i).equals(fbName)) {
+                break;
+            }
+        }
+        userReminder.setFriendId(userFriendList.getFriendId().get(i));
     }
 
 }

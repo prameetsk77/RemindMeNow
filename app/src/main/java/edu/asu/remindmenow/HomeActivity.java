@@ -7,6 +7,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import edu.asu.remindmenow.nearby.NearbyAPIManager;
+import edu.asu.remindmenow.userManager.UserSession;
+
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -14,6 +17,8 @@ public class HomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+        NearbyAPIManager manager = new NearbyAPIManager(this, UserSession.getInstance().getLoggedInUser().getId());
+        manager.startAPI();
     }
 
     public void mapIconClicked(View v){

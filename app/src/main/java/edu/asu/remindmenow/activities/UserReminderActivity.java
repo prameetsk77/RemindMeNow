@@ -1,4 +1,4 @@
-package edu.asu.remindmenow;
+package edu.asu.remindmenow.activities;
 
 import android.app.DatePickerDialog;
 import android.os.Bundle;
@@ -19,10 +19,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
 
+import edu.asu.remindmenow.R;
 import edu.asu.remindmenow.models.UserFriendList;
 import edu.asu.remindmenow.models.UserReminder;
 

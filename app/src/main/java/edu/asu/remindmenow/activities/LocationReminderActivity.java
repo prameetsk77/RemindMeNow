@@ -1,4 +1,4 @@
-package edu.asu.remindmenow;
+package edu.asu.remindmenow.activities;
 
 import android.app.DatePickerDialog;
 import android.os.Bundle;
@@ -9,8 +9,7 @@ import android.widget.EditText;
 
 import java.util.Calendar;
 
-import edu.asu.remindmenow.nearby.NearbyAPIManager;
-import edu.asu.remindmenow.userManager.UserSession;
+import edu.asu.remindmenow.R;
 
 public class LocationReminderActivity extends AppCompatActivity {
 
@@ -22,10 +21,6 @@ public class LocationReminderActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_location_reminder);
-
-
-        NearbyAPIManager mng = new NearbyAPIManager(this, UserSession.getInstance().getLoggedInUser().getName());
-        mng.startAPI();
 
         textView = (EditText)findViewById(R.id.dateTextView);
         final Calendar myCalendar = Calendar.getInstance();

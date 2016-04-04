@@ -8,16 +8,20 @@ import android.os.IBinder;
 
 import android.util.Log;
 
-import edu.asu.remindmenow.nearby.NearbyAPIManager;
+import edu.asu.remindmenow.bluetooth.BluetoothAdvertiser;
+import edu.asu.remindmenow.bluetooth.BluetoothReceiver;
 import edu.asu.remindmenow.userManager.UserSession;
+
 
 /**
  * Created by Jithin Roy on 3/23/16.
  */
-public class UserReminderService extends Service {
+public class UserReminderService extends Service implements BluetoothReceiver.BluetoothReceiverInterface {
 
     // Binder given to clients
     private final IBinder mBinder = new LocalBinder();
+    private BluetoothAdvertiser mAdvertiser;
+    private BluetoothReceiver mReceiver;
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -33,15 +37,30 @@ public class UserReminderService extends Service {
 
     private void startAdvertiseService() {
         Log.i("Service", "startAdvertiseService");
-        String userID = "FB_USER_ID";
+        String userID = UserSession.getInstance().getLoggedInUser().getId();
+        String advId = "RM_"+userID;
+        mAdvertiser = new BluetoothAdvertiser(this);
 
     }
 
+    private void startDiscovery () {
+        mReceiver = new BluetoothReceiver(this,this);
+    }
 
     public class LocalBinder extends Binder {
 
         public UserReminderService getService() {
             return UserReminderService.this;
         }
+    }
+
+    @Override
+    public void didFoundDevice(String deviceName) {
+
+    }
+
+    @Override
+    public void didFinishDiscovery() {
+
     }
 }

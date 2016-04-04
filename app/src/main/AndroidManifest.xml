@@ -50,7 +50,7 @@
 
 
         <activity
-            android:name=".MainActivity"
+            android:name=".activities.MainActivity"
             android:label="@string/app_name">
 
             <intent-filter>
@@ -60,32 +60,32 @@
         </activity>
 
         <activity
-            android:name=".UserReminderActivity"
+            android:name=".activities.UserReminderActivity"
             android:label="@string/app_name">
         </activity>
 
         <activity
-            android:name=".GeofenceReminderActivity"
+            android:name=".activities.GeofenceReminderActivity"
             android:label="@string/app_name"
             >
         </activity>
 
 
         <activity
-            android:name=".HomeActivity"
+            android:name=".activities.HomeActivity"
             android:label="@string/app_name">
 
 
         </activity>
 
         <activity
-            android:name=".LocationReminderActivity"
+            android:name=".activities.LocationReminderActivity"
             android:label="@string/app_name">
 
         </activity>
 
         <activity
-            android:name=".SettingsActivity"
+            android:name=".activities.SettingsActivity"
             android:label="@string/app_name">
 
         </activity>

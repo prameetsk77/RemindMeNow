@@ -1,4 +1,4 @@
-package edu.asu.remindmenow;
+package edu.asu.remindmenow.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,6 +7,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.facebook.login.LoginManager;
+
+import edu.asu.remindmenow.R;
 import edu.asu.remindmenow.bluetooth.BluetoothAdvertiser;
 import edu.asu.remindmenow.userManager.UserSession;
 
@@ -50,6 +53,11 @@ public class HomeActivity extends AppCompatActivity {
             startActivity(intent);
             return true;
         }else if (id==R.id.action_logOut) {
+
+            LoginManager.getInstance().logOut();
+            Intent intent=new Intent(this, MainActivity.class);
+            startActivity(intent);
+            finish();
             return true;
         }
         return super.onOptionsItemSelected(item);

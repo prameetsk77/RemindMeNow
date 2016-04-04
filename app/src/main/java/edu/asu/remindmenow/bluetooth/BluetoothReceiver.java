@@ -7,59 +7,65 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.util.Log;
-import android.widget.Toast;
 
 /**
  * Created by Jithin Roy on 3/23/16.
  */
 public class BluetoothReceiver {
 
-
-    private Context context;
-
+    private Context mContext;
     private BluetoothAdapter mBluetoothAdapter;
+    private BluetoothReceiverInterface mInterface;
 
-    public BluetoothReceiver(Context ctx) {
-        context = ctx;
+    public BluetoothReceiver(Context ctx, BluetoothReceiverInterface interf) {
+        mContext = ctx;
+        mInterface = interf;
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-
     }
 
     public void startDiscovery () {
-        mBluetoothAdapter.startDiscovery();
 
-        // Register for broadcasts when a device is discovered
         IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
-        context.registerReceiver(mReceiver, filter);
-
-        // Register for broadcasts when discovery has finished
+        mContext.registerReceiver(mReceiver, filter);
         filter = new IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
-        context.registerReceiver(mReceiver, filter);
+        mContext.registerReceiver(mReceiver, filter);
+
+        mBluetoothAdapter.startDiscovery();
     }
 
+    public boolean isDiscovering() {
+        return  mBluetoothAdapter.isDiscovering();
+    }
 
     private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
-            Log.v("Bluetooth", "On receive " + action);
-            // When discovery finds a device
             if (BluetoothDevice.ACTION_FOUND.equals(action)) {
-                //do something
 
                 BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-                // Add the name and address to an array adapter to show in a Toast
                 String derp = device.getName() + " - " + device.getAddress();
 
                 if (derp.startsWith("RM_")) {
-                    Toast.makeText(BluetoothReceiver.this.context, derp, Toast.LENGTH_LONG).show();
+                    Log.v("Bluetooth", "Entered the Found " + derp);
+                    mInterface.didFoundDevice(derp);
+
                 }
-                Log.v("Bluetooth", "On r " + derp);
 
             } else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
                 Log.v("Bluetooth", "Entered the Finished ");
+                mInterface.didFinishDiscovery();
 
             }
         }
     };
+
+    public interface BluetoothReceiverInterface {
+
+        void didFoundDevice(String deviceName);
+
+        void didFinishDiscovery();
+
+    }
 }
+

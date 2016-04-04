@@ -53,10 +53,8 @@
         android:textSize="40dp"
         android:textStyle="bold"
         android:layout_alignTop="@+id/imageButton3"
-        android:layout_toRightOf="@+id/imageButton3"
         android:layout_toEndOf="@+id/imageButton3"
-        android:layout_marginLeft="64dp"
-        android:layout_marginStart="64dp"
+        android:layout_marginLeft="60dp"
         android:onClick="zoneIconClicked"/>
 
     <TextView

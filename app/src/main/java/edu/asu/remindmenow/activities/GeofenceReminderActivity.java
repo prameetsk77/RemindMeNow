@@ -1,4 +1,4 @@
-package edu.asu.remindmenow;
+package edu.asu.remindmenow.activities;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
@@ -11,8 +11,8 @@ import android.widget.TimePicker;
 
 import java.util.Calendar;
 
+import edu.asu.remindmenow.R;
 import edu.asu.remindmenow.models.GeofenceReminder;
-import edu.asu.remindmenow.models.UserReminder;
 
 /**
  * Created by priyama on 3/21/2016.

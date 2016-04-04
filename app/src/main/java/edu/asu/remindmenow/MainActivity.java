@@ -22,15 +22,13 @@ import org.json.JSONObject;
 
 import java.util.Calendar;
 
+import edu.asu.remindmenow.bluetooth.BluetoothAdvertiser;
 import edu.asu.remindmenow.models.User;
 import edu.asu.remindmenow.userManager.UserSession;
 
 public class MainActivity extends AppCompatActivity {
 
-
-
     private static String TAG = "MainActivity";
-
     CallbackManager callbackManager;
 
 
@@ -85,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
 
                 });
 
-
+     ;
 
     }
 
@@ -98,4 +96,5 @@ public class MainActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         callbackManager.onActivityResult(requestCode, resultCode, data);
     }
+
 }

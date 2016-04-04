@@ -11,6 +11,9 @@ import android.widget.TimePicker;
 
 import java.util.Calendar;
 
+import edu.asu.remindmenow.models.GeofenceReminder;
+import edu.asu.remindmenow.models.UserReminder;
+
 /**
  * Created by priyama on 3/21/2016.
  */
@@ -129,5 +132,16 @@ public class GeofenceReminderActivity extends AppCompatActivity {
                         myEndCalendar.get(Calendar.DAY_OF_MONTH)).show();
             }
         });
+    }
+
+    public void saveGeofenceClicked(View v){
+
+        GeofenceReminder geofenceReminder=new GeofenceReminder();
+        geofenceReminder.setStartDate(textView.getText().toString());
+        geofenceReminder.setEndDate(endTextView.getText().toString());
+        geofenceReminder.setStartTime(timeTextView.getText().toString());
+        geofenceReminder.setEndTime(endTimeTextView.getText().toString());
+        System.out.println("geo " + geofenceReminder.getEndTime());
+
     }
 }

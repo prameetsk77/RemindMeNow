@@ -34,8 +34,7 @@ public class UserReminderService extends Service {
     private void startAdvertiseService() {
         Log.i("Service", "startAdvertiseService");
         String userID = "FB_USER_ID";
-        NearbyAPIManager mng = new NearbyAPIManager(this, UserSession.getInstance().getLoggedInUser().getName());
-        mng.startAPI();
+
     }
 
 

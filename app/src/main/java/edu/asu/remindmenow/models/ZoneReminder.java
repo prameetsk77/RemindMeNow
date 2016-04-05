@@ -3,27 +3,20 @@ package edu.asu.remindmenow.models;
 /**
  * Created by Priyama Biswas on 3/26/16.
  */
-public class UserReminder {
+public class ZoneReminder {
     String reminderTitle;
-    String friendId;
-    String friendName;
+    String location;
     String startDate;
     String endDate;
+    String startTime;
+    String endTime;
 
-    public String getFriendId() {
-        return friendId;
+    public String getLocation() {
+        return location;
     }
 
-    public void setFriendId(String friendId) {
-        this.friendId = friendId;
-    }
-
-    public String getFriendName() {
-        return friendName;
-    }
-
-    public void setFriendName(String friendName) {
-        this.friendName = friendName;
+    public void setLocation(String location) {
+        this.location = location;
     }
 
     public String getStartDate() {
@@ -42,11 +35,27 @@ public class UserReminder {
         this.endDate = endDate;
     }
 
+    public String getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(String startTime) {
+        this.startTime = startTime;
+    }
+
+    public String getEndTime() {
+        return endTime;
+    }
+
     public String getReminderTitle() {
         return reminderTitle;
     }
 
     public void setReminderTitle(String reminderTitle) {
         this.reminderTitle = reminderTitle;
+    }
+
+    public void setEndTime(String endTime) {
+        this.endTime = endTime;
     }
 }

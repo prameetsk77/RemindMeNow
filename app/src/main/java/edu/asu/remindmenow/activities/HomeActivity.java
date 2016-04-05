@@ -12,6 +12,8 @@ import com.facebook.login.LoginManager;
 
 import edu.asu.remindmenow.R;
 import edu.asu.remindmenow.bluetooth.BluetoothAdvertiser;
+import edu.asu.remindmenow.exception.ApplicationBusinessException;
+import edu.asu.remindmenow.exception.ApplicationRuntimeException;
 import edu.asu.remindmenow.models.User;
 import edu.asu.remindmenow.userManager.UserSession;
 import edu.asu.remindmenow.util.DBConnection;
@@ -19,7 +21,7 @@ import edu.asu.remindmenow.util.DBConnection;
 public class HomeActivity extends AppCompatActivity {
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) throws ApplicationRuntimeException {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
@@ -28,7 +30,7 @@ public class HomeActivity extends AppCompatActivity {
 
         User loggedIN = DBConnection.getInstance().getData(UserSession.getInstance().getLoggedInUser().getId());
 
-        Log.i("TAAAF", loggedIN.getName());
+        Log.i("OMG", loggedIN.getName());
     }
 
     public void mapIconClicked(View v){

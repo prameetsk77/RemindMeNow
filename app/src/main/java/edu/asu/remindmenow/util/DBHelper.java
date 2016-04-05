@@ -9,6 +9,8 @@ import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteDatabase;
 
+import edu.asu.remindmenow.exception.ApplicationRuntimeException;
+import edu.asu.remindmenow.models.Message;
 import edu.asu.remindmenow.models.User;
 
 /**
@@ -61,62 +63,70 @@ public class DBHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
 
+    try {
+            db.execSQL(
+                    "create table " + RM_TIME_TABLE_NAME +
+                            " (" + RM_TIME_ID + " integer primary key, " +
+                            RM_TIME_START_DATE + "text," +
+                            RM_TIME_END_DATE + " text," +
+                            RM_TIME_START_TIME + " text, " +
+                            RM_TIME_END_TIME + " text)"
+            );
 
-        db.execSQL(
-                "create table " + RM_TIME_TABLE_NAME +
-                        " (" + RM_TIME_ID +" integer primary key, " +
-                        RM_TIME_START_DATE + "text," +
-                        RM_TIME_END_DATE + " text," +
-                        RM_TIME_START_TIME + " text, " +
-                        RM_TIME_END_TIME + " text)"
-        );
-
-        db.execSQL(
-                "create table "+ RM_REMINDER_TABLE_NAME +
-                        " (" + RM_REMINDER_ID + " integer primary key, " +
-                        RM_REMINDER_TIME_ID +" integer, "+
-
-
-                        RM_REMINDER_TYPE + " text," +
-                        RM_REMINDER_TITLE + " text," +
-                        RM_REMINDER_CREATED_DATE + " text, " +
-                        RM_REMINDER_CREATED_BY + " text, " +
-                        "FOREIGN KEY ("+RM_REMINDER_TIME_ID+") REFERENCES "+RM_TIME_TABLE_NAME+" ("+RM_TIME_ID+"))"
-        );
+            db.execSQL(
+                    "create table " + RM_REMINDER_TABLE_NAME +
+                            " (" + RM_REMINDER_ID + " integer primary key, " +
+                            RM_REMINDER_TIME_ID + " integer, " +
 
 
-        db.execSQL(
-                "create table " + RM_USER_TABLE_NAME +
-                        " (" + RM_USER_ID + " text primary key, " +
-                        RM_USER_NAME + " text)"
-        );
+                            RM_REMINDER_TYPE + " text," +
+                            RM_REMINDER_TITLE + " text," +
+                            RM_REMINDER_CREATED_DATE + " text, " +
+                            RM_REMINDER_CREATED_BY + " text, " +
+                            "FOREIGN KEY (" + RM_REMINDER_TIME_ID + ") REFERENCES " + RM_TIME_TABLE_NAME + " (" + RM_TIME_ID + "))"
+            );
 
-        db.execSQL(
-                "create table " + RM_LOCATION_TABLE_NAME +
-                        " (" + RM_LOC_ID + " integer primary key, " +
-                        RM_LOC_LAT + " text," +
-                        RM_LOC_LONG + " text," +
-                        RM_LOC_ADDRESS + " text)"
-        );
 
-        db.execSQL(
-                "create table " + RM_REMINDER_USER_REF_TABLE_NAME +
-                        " (" + RM_REMINDER_USER_ID + " integer primary key, " +
-                        RM_REMINDER_ID + " integer," +
-                        RM_USER_ID + " integer," +
-                        "FOREIGN KEY ("+RM_REMINDER_ID+") REFERENCES "+RM_REMINDER_TABLE_NAME+" ("+RM_REMINDER_ID+"),"+
-                        "FOREIGN KEY ("+RM_USER_ID+") REFERENCES "+RM_USER_TABLE_NAME+" ("+RM_USER_ID+"))"
+            db.execSQL(
+                    "create table " + RM_USER_TABLE_NAME +
+                            " (" + RM_USER_ID + " text primary key, " +
+                            RM_USER_NAME + " text)"
+            );
 
-        );
+            db.execSQL(
+                    "create table " + RM_LOCATION_TABLE_NAME +
+                            " (" + RM_LOC_ID + " integer primary key, " +
+                            RM_LOC_LAT + " text," +
+                            RM_LOC_LONG + " text," +
+                            RM_LOC_ADDRESS + " text)"
+            );
 
-        db.execSQL(
-                "create table " + RM_REMINDER_LOC_REF_TABLE_NAME +
-                        " (" + RM_REMINDER_LOC_ID +" integer primary key, " +
-                        RM_REMINDER_ID + " integer," +
-                        RM_LOC_ID + " integer,"+
-                        "FOREIGN KEY ("+RM_REMINDER_ID+") REFERENCES "+RM_REMINDER_TABLE_NAME+" ("+RM_REMINDER_ID+"),"+
-                        "FOREIGN KEY ("+RM_LOC_ID+") REFERENCES "+RM_LOCATION_TABLE_NAME+" ("+RM_LOC_ID+"))"
-        );
+            db.execSQL(
+                    "create table " + RM_REMINDER_USER_REF_TABLE_NAME +
+                            " (" + RM_REMINDER_USER_ID + " integer primary key, " +
+                            RM_REMINDER_ID + " integer," +
+                            RM_USER_ID + " integer," +
+                            "FOREIGN KEY (" + RM_REMINDER_ID + ") REFERENCES " + RM_REMINDER_TABLE_NAME + " (" + RM_REMINDER_ID + ")," +
+                            "FOREIGN KEY (" + RM_USER_ID + ") REFERENCES " + RM_USER_TABLE_NAME + " (" + RM_USER_ID + "))"
+
+            );
+
+            db.execSQL(
+                    "create table " + RM_REMINDER_LOC_REF_TABLE_NAME +
+                            " (" + RM_REMINDER_LOC_ID + " integer primary key, " +
+                            RM_REMINDER_ID + " integer," +
+                            RM_LOC_ID + " integer," +
+                            "FOREIGN KEY (" + RM_REMINDER_ID + ") REFERENCES " + RM_REMINDER_TABLE_NAME + " (" + RM_REMINDER_ID + ")," +
+                            "FOREIGN KEY (" + RM_LOC_ID + ") REFERENCES " + RM_LOCATION_TABLE_NAME + " (" + RM_LOC_ID + "))"
+            );
+        }
+        catch (Exception ex) {
+            //log
+            String errorCode = ApplicationConstants.SYSTEM_FAILURE;
+            Message message = new Message();
+            message.setCode(errorCode);
+            throw new ApplicationRuntimeException(message);
+        }
     }
 
     @Override

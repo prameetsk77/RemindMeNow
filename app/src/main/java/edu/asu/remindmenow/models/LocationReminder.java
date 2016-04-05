@@ -1,14 +1,21 @@
 package edu.asu.remindmenow.models;
 
 /**
- * Created by Jithin Roy on 3/27/16.
+ * Created by priyama on 4/5/2016.
  */
-public class GeofenceReminder {
+public class LocationReminder {
+    String reminderTitle;
     String location;
     String startDate;
     String endDate;
-    String startTime;
-    String endTime;
+
+    public String getReminderTitle() {
+        return reminderTitle;
+    }
+
+    public void setReminderTitle(String reminderTitle) {
+        this.reminderTitle = reminderTitle;
+    }
 
     public String getLocation() {
         return location;
@@ -32,21 +39,5 @@ public class GeofenceReminder {
 
     public void setEndDate(String endDate) {
         this.endDate = endDate;
-    }
-
-    public String getStartTime() {
-        return startTime;
-    }
-
-    public void setStartTime(String startTime) {
-        this.startTime = startTime;
-    }
-
-    public String getEndTime() {
-        return endTime;
-    }
-
-    public void setEndTime(String endTime) {
-        this.endTime = endTime;
     }
 }

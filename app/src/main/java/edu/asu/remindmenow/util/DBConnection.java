@@ -42,11 +42,11 @@ public class DBConnection {
             db = mDbHelper.getWritableDatabase();
             ContentValues contentValues = new ContentValues();
 
-            //public static final String RM_REMINDER_ID = "reminder_id";
-            //public static final String RM_REMINDER_TIME_ID = "reminder_time_id";
-            contentValues.put(DBHelper.RM_REMINDER_TYPE,"");
-            contentValues.put(DBHelper.RM_REMINDER_TITLE,"");
-            contentValues.put(DBHelper.RM_REMINDER_CREATED_DATE,"");
+            //contentValues.put(DBHelper.RM_REMINDER_ID, null);
+            //contentValues.put(DBHelper.RM_REMINDER_TIME_ID
+            contentValues.put(DBHelper.RM_REMINDER_TYPE,"U");
+            contentValues.put(DBHelper.RM_REMINDER_TITLE,reminder.getReminderTitle());
+            contentValues.put(DBHelper.RM_REMINDER_CREATED_DATE,System.currentTimeMillis());
             contentValues.put(DBHelper.RM_REMINDER_CREATED_BY, UserSession.getInstance().getLoggedInUser().getId());
 
             db.insertOrThrow(DBHelper.RM_USER_TABLE_NAME, null, contentValues);

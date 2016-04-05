@@ -12,7 +12,7 @@ import android.widget.TimePicker;
 import java.util.Calendar;
 
 import edu.asu.remindmenow.R;
-import edu.asu.remindmenow.models.GeofenceReminder;
+import edu.asu.remindmenow.models.ZoneReminder;
 
 /**
  * Created by priyama on 3/21/2016.
@@ -136,7 +136,7 @@ public class GeofenceReminderActivity extends AppCompatActivity {
 
     public void saveGeofenceClicked(View v){
 
-        GeofenceReminder geofenceReminder=new GeofenceReminder();
+        ZoneReminder geofenceReminder=new ZoneReminder();
         geofenceReminder.setStartDate(textView.getText().toString());
         geofenceReminder.setEndDate(endTextView.getText().toString());
         geofenceReminder.setStartTime(timeTextView.getText().toString());

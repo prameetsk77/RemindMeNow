@@ -58,17 +58,17 @@ public class MainActivity extends AppCompatActivity {
                 new FacebookCallback<LoginResult>() {
                     @Override
                     public void onSuccess(LoginResult loginResult) {
-                        System.out.println("On sucess");
+
                     }
 
                     @Override
                     public void onCancel() {
-                        // App code
+
                     }
 
                     @Override
                     public void onError(FacebookException exception) {
-                        System.out.println("On error");
+
                     }
 
                 });

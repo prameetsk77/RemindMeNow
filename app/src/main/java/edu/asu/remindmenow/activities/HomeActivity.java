@@ -3,6 +3,7 @@ package edu.asu.remindmenow.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -11,7 +12,9 @@ import com.facebook.login.LoginManager;
 
 import edu.asu.remindmenow.R;
 import edu.asu.remindmenow.bluetooth.BluetoothAdvertiser;
+import edu.asu.remindmenow.models.User;
 import edu.asu.remindmenow.userManager.UserSession;
+import edu.asu.remindmenow.util.DBConnection;
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -23,7 +26,9 @@ public class HomeActivity extends AppCompatActivity {
         BluetoothAdvertiser adv = new BluetoothAdvertiser(this);
         adv.startAdvertising("RM_" + UserSession.getInstance().getLoggedInUser().getId());
 
+        User loggedIN = DBConnection.getInstance().getData(UserSession.getInstance().getLoggedInUser().getId());
 
+        Log.i("TAAAF", loggedIN.getName());
     }
 
     public void mapIconClicked(View v){

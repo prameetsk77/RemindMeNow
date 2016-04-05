@@ -21,16 +21,14 @@ import edu.asu.remindmenow.util.DBConnection;
 public class HomeActivity extends AppCompatActivity {
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) throws ApplicationRuntimeException {
+    protected void onCreate(Bundle savedInstanceState)  {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
         BluetoothAdvertiser adv = new BluetoothAdvertiser(this);
         adv.startAdvertising("RM_" + UserSession.getInstance().getLoggedInUser().getId());
 
-        User loggedIN = DBConnection.getInstance().getData(UserSession.getInstance().getLoggedInUser().getId());
 
-        Log.i("OMG", loggedIN.getName());
     }
 
     public void mapIconClicked(View v){

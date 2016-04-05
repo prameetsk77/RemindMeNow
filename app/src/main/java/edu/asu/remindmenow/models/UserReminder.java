@@ -5,26 +5,11 @@ package edu.asu.remindmenow.models;
  */
 public class UserReminder {
     String reminderTitle;
-    String friendId;
-    String friendName;
+    User friend;
+
     String startDate;
     String endDate;
 
-    public String getFriendId() {
-        return friendId;
-    }
-
-    public void setFriendId(String friendId) {
-        this.friendId = friendId;
-    }
-
-    public String getFriendName() {
-        return friendName;
-    }
-
-    public void setFriendName(String friendName) {
-        this.friendName = friendName;
-    }
 
     public String getStartDate() {
         return startDate;
@@ -48,5 +33,13 @@ public class UserReminder {
 
     public void setReminderTitle(String reminderTitle) {
         this.reminderTitle = reminderTitle;
+    }
+
+    public User getFriend() {
+        return friend;
+    }
+
+    public void setFriend(User friend) {
+        this.friend = friend;
     }
 }

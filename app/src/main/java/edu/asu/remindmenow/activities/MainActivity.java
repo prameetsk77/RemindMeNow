@@ -22,6 +22,8 @@ import com.facebook.login.widget.LoginButton;
 import org.json.JSONObject;
 
 import edu.asu.remindmenow.R;
+import edu.asu.remindmenow.exception.ApplicationRuntimeException;
+import edu.asu.remindmenow.models.Message;
 import edu.asu.remindmenow.models.User;
 import edu.asu.remindmenow.userManager.UserSession;
 import edu.asu.remindmenow.util.DBConnection;
@@ -36,7 +38,8 @@ public class MainActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        DBConnection.getInstance().setContext(getApplicationContext());
+            DBConnection.getInstance().setContext(getApplicationContext());
+
         FacebookSdk.sdkInitialize(this.getApplicationContext());
         callbackManager = CallbackManager.Factory.create();
 
@@ -93,7 +96,13 @@ public class MainActivity extends AppCompatActivity {
                 User loggedInuser = new User();
                 loggedInuser.setId(user.optString("id"));
                 loggedInuser.setName(user.optString("name"));
-                DBConnection.getInstance().insertContact(loggedInuser);
+                try {
+                    DBConnection.getInstance().insertContact(loggedInuser);
+                } catch (ApplicationRuntimeException ex) {
+                    ex.printStackTrace();
+                    Message m=ex.getErrorMessage();
+                    Log.i(TAG,m.getDescription() );
+                }
                 UserSession.getInstance().setLoggedInUser(loggedInuser);
 
                 Intent intent = new Intent(MainActivity.this, HomeActivity.class);

@@ -4,8 +4,13 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
+import edu.asu.remindmenow.exception.ApplicationRuntimeException;
+import edu.asu.remindmenow.models.Message;
 import edu.asu.remindmenow.models.User;
+import edu.asu.remindmenow.models.UserReminder;
+import edu.asu.remindmenow.userManager.UserSession;
 
 /**
  * Created by priyama on 4/4/2016.
@@ -27,16 +32,73 @@ public class DBConnection {
         mDbHelper = new DBHelper(ctx);
     }
 
+    //==============================================================================================
+    // Reminder User
+    //==============================================================================================
+
+    public boolean insertUserReminder(UserReminder reminder) {
+        SQLiteDatabase db = null;
+        try {
+            db = mDbHelper.getWritableDatabase();
+            ContentValues contentValues = new ContentValues();
+
+            //public static final String RM_REMINDER_ID = "reminder_id";
+            //public static final String RM_REMINDER_TIME_ID = "reminder_time_id";
+            contentValues.put(DBHelper.RM_REMINDER_TYPE,"");
+            contentValues.put(DBHelper.RM_REMINDER_TITLE,"");
+            contentValues.put(DBHelper.RM_REMINDER_CREATED_DATE,"");
+            contentValues.put(DBHelper.RM_REMINDER_CREATED_BY, UserSession.getInstance().getLoggedInUser().getId());
+
+            db.insertOrThrow(DBHelper.RM_USER_TABLE_NAME, null, contentValues);
+            db.close();
+
+        } catch (Exception ex) {
+            //log
+            Log.i("DBConnection", "exceptopm ");
+            String errorCode = ApplicationConstants.SYSTEM_FAILURE;
+            Message message = new Message();
+            message.setCode(errorCode);
+            message.setDescription(ex.getMessage());
+            throw new ApplicationRuntimeException(message);
+        }
+        return  true;
+    }
+
+    //==============================================================================================
+    // Reminder Zone
+    //==============================================================================================
 
 
-    public boolean insertContact  (User user)
-    {
-        SQLiteDatabase db = mDbHelper.getWritableDatabase();
-        ContentValues contentValues = new ContentValues();
-        contentValues.put(DBHelper.RM_USER_ID, user.getId());
-        contentValues.put(DBHelper.RM_USER_NAME, user.getName());
-        db.insert(DBHelper.RM_USER_TABLE_NAME, null, contentValues);
-        db.close();
+    //==============================================================================================
+    // Reminder Loc
+    //==============================================================================================
+
+
+
+    //==============================================================================================
+    // User
+    //==============================================================================================
+
+    public boolean insertUser(User user)  {
+
+        SQLiteDatabase db = null;
+        try {
+            db = mDbHelper.getWritableDatabase();
+            ContentValues contentValues = new ContentValues();
+            contentValues.put(DBHelper.RM_USER_ID, user.getId());
+            contentValues.put(DBHelper.RM_USER_NAME, user.getName());
+            db.insertOrThrow(DBHelper.RM_USER_TABLE_NAME, null, contentValues);
+            db.close();
+        } catch (Exception ex) {
+            //log
+            Log.i("DBConnection", "exceptopm ");
+            String errorCode = ApplicationConstants.SYSTEM_FAILURE;
+            Message message = new Message();
+            message.setCode(errorCode);
+            message.setDescription(ex.getMessage());
+            throw new ApplicationRuntimeException(message);
+        }
+
         return true;
     }
     //

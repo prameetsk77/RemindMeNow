@@ -50,11 +50,6 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String RM_REMINDER_USER_ID = "reminder_user_id";
     public static final String RM_REMINDER_LOC_ID = "reminder_loc_id";
 
-
-
-
-    private HashMap hp;
-
     public DBHelper(Context context)
     {
         super(context, DATABASE_NAME, null, 1);

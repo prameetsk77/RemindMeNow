@@ -129,10 +129,11 @@ public class DatabaseManager {
                 reminder.setReminderTitle(cursor.getString(cursor.getColumnIndex(DBHelper.RM_REMINDER_TITLE)));
                 long timeId = cursor.getLong(cursor.getColumnIndex(DBHelper.RM_REMINDER_TIME_ID));
                 Time time = getTime(db, timeId);
-                
+
                 //reminder.setStartDate(cursor.getString(cursor.getColumnIndex(DBHelper.RM_Reminder_)));
 
             }
+            return null;
 
         } catch (Exception ex) {
             ex.printStackTrace();

@@ -26,9 +26,8 @@ public class HomeActivity extends AppCompatActivity {
 
         SQLiteDatabase db = DBConnection.getInstance().openWritableDB();
         DatabaseManager dbManager = new DatabaseManager();
-        dbManager.getAllUserReminders(db);
+        dbManager.isUserPresentInReminder(db,"10209187059889895");
         DBConnection.getInstance().closeDB(db);
-
         new NotificationService().notify("Hello World", "Shaitan" ,this);
     }
 

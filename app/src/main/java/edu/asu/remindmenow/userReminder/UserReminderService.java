@@ -3,6 +3,7 @@ package edu.asu.remindmenow.userReminder;
 import android.app.Service;
 
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Binder;
 import android.os.IBinder;
 
@@ -11,6 +12,8 @@ import android.util.Log;
 import edu.asu.remindmenow.bluetooth.BluetoothAdvertiser;
 import edu.asu.remindmenow.bluetooth.BluetoothReceiver;
 import edu.asu.remindmenow.userManager.UserSession;
+import edu.asu.remindmenow.util.DBConnection;
+import edu.asu.remindmenow.util.DatabaseManager;
 
 
 /**
@@ -22,6 +25,7 @@ public class UserReminderService extends Service implements BluetoothReceiver.Bl
     private final IBinder mBinder = new LocalBinder();
     private BluetoothAdvertiser mAdvertiser;
     private BluetoothReceiver mReceiver;
+    private static String TAG = "UserReminderService";
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -56,6 +60,17 @@ public class UserReminderService extends Service implements BluetoothReceiver.Bl
 
     @Override
     public void didFoundDevice(String deviceName) {
+        String userId = deviceName.replaceAll("RM_", "");
+        Log.i(TAG, "Found user - " + userId);
+
+
+        SQLiteDatabase db = DBConnection.getInstance().openWritableDB();
+        DatabaseManager dbManager = new DatabaseManager();
+        long remId = dbManager.isUserPresentInReminder(db,userId);
+        DBConnection.getInstance().closeDB(db);
+
+
+
 
     }
 

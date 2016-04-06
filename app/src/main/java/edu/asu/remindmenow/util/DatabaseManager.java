@@ -11,6 +11,7 @@ import java.util.List;
 import edu.asu.remindmenow.exception.ApplicationRuntimeException;
 import edu.asu.remindmenow.models.Message;
 import edu.asu.remindmenow.models.Reminder;
+import edu.asu.remindmenow.models.Time;
 import edu.asu.remindmenow.models.User;
 import edu.asu.remindmenow.models.UserReminder;
 import edu.asu.remindmenow.userManager.UserSession;
@@ -31,7 +32,10 @@ public class DatabaseManager {
         Cursor cursor =  db.rawQuery( "select * from " + DBHelper.RM_REMINDER_TABLE_NAME, null );
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
-            Log.i(TAG, "REminder - " + cursor.getString(cursor.getColumnIndex(DBHelper.RM_REMINDER_CREATED_DATE)));
+            String reminderType = cursor.getString(cursor.getColumnIndex(DBHelper.RM_REMINDER_TYPE));
+            if (reminderType.equals("U")) {
+
+            }
             cursor.moveToNext();
         }
 
@@ -43,7 +47,7 @@ public class DatabaseManager {
     // Reminder User
     //==============================================================================================
 
-    public List<Reminder> getAllUserReminders(SQLiteDatabase db) {
+    public List<UserReminder> getAllUserReminders(SQLiteDatabase db) {
 
         Cursor cursor =  db.rawQuery( "select * from " + DBHelper.RM_REMINDER_TABLE_NAME +
                 " WHERE " + DBHelper.RM_REMINDER_TYPE +" = \"U\"", null );
@@ -53,9 +57,22 @@ public class DatabaseManager {
             cursor.moveToNext();
         }
 
-
         return null;
     }
+
+    public long isUserPresentInReminder(SQLiteDatabase db, String userId) {
+
+        Cursor cursor =  db.rawQuery( "select * from " + DBHelper.RM_REMINDER_USER_REF_TABLE_NAME+
+                " WHERE " + DBHelper.RM_USER_ID +" = \""+userId+"\"", null );
+
+        if (cursor.moveToFirst()) {
+            long id = cursor.getLong(cursor.getColumnIndex(DBHelper.RM_REMINDER_ID));
+            Log.i(TAG, "Found user - " + id);
+            return id;
+        }
+        return -1;
+    }
+
 
     public long insertUserReminder(SQLiteDatabase db, UserReminder reminder) {
 
@@ -66,7 +83,7 @@ public class DatabaseManager {
             // Create time entry
             contentValues.put(DBHelper.RM_TIME_START_DATE,reminder.getStartDate());
             contentValues.put(DBHelper.RM_TIME_END_DATE, reminder.getEndDate());
-            long timeId = db.insertOrThrow(DBHelper.RM_TIME_TABLE_NAME, null, contentValues);
+            long timeId = insertTime(db,reminder.getStartDate(), reminder.getEndDate(), null, null);
 
             // Create reminder entry
             contentValues = new ContentValues();
@@ -100,16 +117,93 @@ public class DatabaseManager {
     }
 
 
+    public UserReminder getReminder(SQLiteDatabase db, long reminderId) {
+
+        try {
+
+            Cursor cursor =  db.rawQuery( "select * from " + DBHelper.RM_REMINDER_TABLE_NAME+
+                    " WHERE " + DBHelper.RM_REMINDER_ID +" = \""+reminderId+"\"", null );
+
+            if (cursor.moveToFirst()) {
+               UserReminder reminder = new UserReminder();
+                reminder.setReminderTitle(cursor.getString(cursor.getColumnIndex(DBHelper.RM_REMINDER_TITLE)));
+                long timeId = cursor.getLong(cursor.getColumnIndex(DBHelper.RM_REMINDER_TIME_ID));
+                Time time = getTime(db, timeId);
+                
+                //reminder.setStartDate(cursor.getString(cursor.getColumnIndex(DBHelper.RM_Reminder_)));
+
+            }
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            String errorCode = ApplicationConstants.SYSTEM_FAILURE;
+            Message message = new Message();
+            message.setCode(errorCode);
+            message.setDescription(ex.getMessage());
+            throw new ApplicationRuntimeException(message);
+        }
+
+    }
+
+
     //==============================================================================================
     // Reminder Zone
     //==============================================================================================
+
 
 
     //==============================================================================================
     // Reminder Loc
     //==============================================================================================
 
+    //==============================================================================================
+    // Time
+    //==============================================================================================
 
+    public long insertTime(SQLiteDatabase db, String startDate, String endDate, String startTime, String endTime) {
+
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(DBHelper.RM_TIME_START_DATE,startDate);
+        contentValues.put(DBHelper.RM_TIME_END_DATE, endDate);
+        if (startTime != null) {
+            contentValues.put(DBHelper.RM_TIME_START_TIME, startTime);
+        }
+        if (endTime != null) {
+            contentValues.put(DBHelper.RM_TIME_END_TIME, endTime);
+        }
+        long timeId = db.insertOrThrow(DBHelper.RM_TIME_TABLE_NAME, null, contentValues);
+        return timeId;
+    }
+
+
+    public Time getTime(SQLiteDatabase db, long timeId) {
+        try {
+
+            Cursor cursor =  db.rawQuery( "select * from " + DBHelper.RM_TIME_TABLE_NAME+
+                    " WHERE " + DBHelper.RM_TIME_ID +" = \""+timeId+"\"", null );
+
+            if (cursor.moveToFirst()) {
+
+                Time time = new Time();
+                time.setTimeId(timeId);
+                time.setStartDate(cursor.getString(cursor.getColumnIndex(DBHelper.RM_TIME_START_DATE)));
+                time.setEndDate(cursor.getString(cursor.getColumnIndex(DBHelper.RM_TIME_END_DATE)));
+                time.setStartTime(cursor.getString(cursor.getColumnIndex(DBHelper.RM_TIME_START_TIME)));
+                time.setEndTime(cursor.getString(cursor.getColumnIndex(DBHelper.RM_TIME_END_TIME)));
+                return  time;
+
+            }
+            return null;
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            String errorCode = ApplicationConstants.SYSTEM_FAILURE;
+            Message message = new Message();
+            message.setCode(errorCode);
+            message.setDescription(ex.getMessage());
+            throw new ApplicationRuntimeException(message);
+        }
+    }
 
     //==============================================================================================
     // User

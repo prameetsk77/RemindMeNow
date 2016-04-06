@@ -10,6 +10,7 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.facebook.AccessToken;
 import com.facebook.GraphRequest;
@@ -168,6 +169,8 @@ public class UserReminderActivity extends AppCompatActivity {
         long id = dbManager.insertUserReminder(db, userReminder);
         //Log
         DBConnection.getInstance().closeDB(db);
+        Toast.makeText(UserReminderActivity.this, "Reminder saved", Toast.LENGTH_SHORT).show();
+        finish();
     }
 
 }

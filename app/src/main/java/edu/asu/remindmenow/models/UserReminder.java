@@ -3,7 +3,10 @@ package edu.asu.remindmenow.models;
 /**
  * Created by Priyama Biswas on 3/26/16.
  */
-public class UserReminder extends Reminder{
+public class UserReminder extends Reminder  {
+
+    long reminderId;
+
     
     User friend;
 

@@ -1,9 +1,9 @@
 package edu.asu.remindmenow.activities;
 
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -12,11 +12,9 @@ import com.facebook.login.LoginManager;
 
 import edu.asu.remindmenow.R;
 import edu.asu.remindmenow.bluetooth.BluetoothAdvertiser;
-import edu.asu.remindmenow.exception.ApplicationBusinessException;
-import edu.asu.remindmenow.exception.ApplicationRuntimeException;
-import edu.asu.remindmenow.models.User;
 import edu.asu.remindmenow.userManager.UserSession;
 import edu.asu.remindmenow.util.DBConnection;
+import edu.asu.remindmenow.util.DatabaseManager;
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -25,9 +23,10 @@ public class HomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        BluetoothAdvertiser adv = new BluetoothAdvertiser(this);
-        adv.startAdvertising("RM_" + UserSession.getInstance().getLoggedInUser().getId());
-
+        SQLiteDatabase db = DBConnection.getInstance().openWritableDB();
+        DatabaseManager dbManager = new DatabaseManager();
+        dbManager.getAllReminders(db);
+        DBConnection.getInstance().closeDB(db);
 
     }
 

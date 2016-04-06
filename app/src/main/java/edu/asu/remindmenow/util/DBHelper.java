@@ -8,6 +8,7 @@ import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import edu.asu.remindmenow.exception.ApplicationRuntimeException;
 import edu.asu.remindmenow.models.Message;
@@ -59,10 +60,11 @@ public class DBHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
 
     try {
+
             db.execSQL(
                     "create table " + RM_TIME_TABLE_NAME +
-                            " (" + RM_TIME_ID + " integer AUTOINCREMENT primary key, " +
-                            RM_TIME_START_DATE + "text," +
+                            " (" + RM_TIME_ID + " integer primary key, " +
+                            RM_TIME_START_DATE + " text," +
                             RM_TIME_END_DATE + " text," +
                             RM_TIME_START_TIME + " text, " +
                             RM_TIME_END_TIME + " text)"
@@ -70,7 +72,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
             db.execSQL(
                     "create table " + RM_REMINDER_TABLE_NAME +
-                            " (" + RM_REMINDER_ID + " integer AUTOINCREMENT primary key, " +
+                            " (" + RM_REMINDER_ID + " integer primary key, " +
                             RM_REMINDER_TIME_ID + " integer, " +
 
 
@@ -90,7 +92,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
             db.execSQL(
                     "create table " + RM_LOCATION_TABLE_NAME +
-                            " (" + RM_LOC_ID + " integer AUTOINCREMENT primary key, " +
+                            " (" + RM_LOC_ID + " integer primary key, " +
                             RM_LOC_LAT + " text," +
                             RM_LOC_LONG + " text," +
                             RM_LOC_ADDRESS + " text)"
@@ -98,7 +100,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
             db.execSQL(
                     "create table " + RM_REMINDER_USER_REF_TABLE_NAME +
-                            " (" + RM_REMINDER_USER_ID + " integer AUTOINCREMENT primary key, " +
+                            " (" + RM_REMINDER_USER_ID + " integer primary key, " +
                             RM_REMINDER_ID + " integer," +
                             RM_USER_ID + " integer," +
                             "FOREIGN KEY (" + RM_REMINDER_ID + ") REFERENCES " + RM_REMINDER_TABLE_NAME + " (" + RM_REMINDER_ID + ")," +
@@ -108,7 +110,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
             db.execSQL(
                     "create table " + RM_REMINDER_LOC_REF_TABLE_NAME +
-                            " (" + RM_REMINDER_LOC_ID + " integer AUTOINCREMENT primary key, " +
+                            " (" + RM_REMINDER_LOC_ID + " integer primary key, " +
                             RM_REMINDER_ID + " integer," +
                             RM_LOC_ID + " integer," +
                             "FOREIGN KEY (" + RM_REMINDER_ID + ") REFERENCES " + RM_REMINDER_TABLE_NAME + " (" + RM_REMINDER_ID + ")," +

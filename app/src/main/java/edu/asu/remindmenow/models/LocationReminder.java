@@ -3,19 +3,11 @@ package edu.asu.remindmenow.models;
 /**
  * Created by priyama on 4/5/2016.
  */
-public class LocationReminder {
-    String reminderTitle;
+public class LocationReminder extends Reminder{
+
     String location;
     String startDate;
     String endDate;
-
-    public String getReminderTitle() {
-        return reminderTitle;
-    }
-
-    public void setReminderTitle(String reminderTitle) {
-        this.reminderTitle = reminderTitle;
-    }
 
     public String getLocation() {
         return location;

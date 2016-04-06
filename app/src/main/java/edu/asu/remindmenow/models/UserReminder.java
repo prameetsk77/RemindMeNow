@@ -3,8 +3,8 @@ package edu.asu.remindmenow.models;
 /**
  * Created by Priyama Biswas on 3/26/16.
  */
-public class UserReminder {
-    String reminderTitle;
+public class UserReminder extends Reminder{
+    
     User friend;
 
     String startDate;
@@ -27,13 +27,6 @@ public class UserReminder {
         this.endDate = endDate;
     }
 
-    public String getReminderTitle() {
-        return reminderTitle;
-    }
-
-    public void setReminderTitle(String reminderTitle) {
-        this.reminderTitle = reminderTitle;
-    }
 
     public User getFriend() {
         return friend;

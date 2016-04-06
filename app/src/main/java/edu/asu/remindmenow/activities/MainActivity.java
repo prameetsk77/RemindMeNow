@@ -2,6 +2,7 @@ package edu.asu.remindmenow.activities;
 
 
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -27,6 +28,7 @@ import edu.asu.remindmenow.models.Message;
 import edu.asu.remindmenow.models.User;
 import edu.asu.remindmenow.userManager.UserSession;
 import edu.asu.remindmenow.util.DBConnection;
+import edu.asu.remindmenow.util.DatabaseManager;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -97,7 +99,12 @@ public class MainActivity extends AppCompatActivity {
                 loggedInuser.setId(user.optString("id"));
                 loggedInuser.setName(user.optString("name"));
                 try {
-                    DBConnection.getInstance().insertContact(loggedInuser);
+
+                    SQLiteDatabase db = DBConnection.getInstance().openWritableDB();
+                    DatabaseManager dbManager = new DatabaseManager();
+                    dbManager.insertUser(db, loggedInuser);
+                    DBConnection.getInstance().closeDB(db);
+
                 } catch (ApplicationRuntimeException ex) {
                     ex.printStackTrace();
                     Message m=ex.getErrorMessage();

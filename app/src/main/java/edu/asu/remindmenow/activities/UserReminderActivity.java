@@ -1,6 +1,7 @@
 package edu.asu.remindmenow.activities;
 
 import android.app.DatePickerDialog;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -22,13 +23,17 @@ import org.json.JSONObject;
 import java.util.Calendar;
 
 import edu.asu.remindmenow.R;
+import edu.asu.remindmenow.models.User;
 import edu.asu.remindmenow.models.UserFriendList;
 import edu.asu.remindmenow.models.UserReminder;
+import edu.asu.remindmenow.util.DBConnection;
+import edu.asu.remindmenow.util.DatabaseManager;
 
 public class UserReminderActivity extends AppCompatActivity {
 
 
-    EditText textView;
+    EditText titleTextView;
+    EditText startTextView;
     EditText endTextView;
     AutoCompleteTextView addaFriend;
 
@@ -73,7 +78,9 @@ public class UserReminderActivity extends AppCompatActivity {
         addaFriend=(AutoCompleteTextView)findViewById(R.id.addaFriendTV);
 
 
-        textView = (EditText)findViewById(R.id.dateTextView);
+        startTextView = (EditText)findViewById(R.id.dateTextView);
+        endTextView = (EditText)findViewById(R.id.endDateTextView);
+        titleTextView = (EditText)findViewById(R.id.titleEditText);
         final Calendar myCalendar = Calendar.getInstance();
 
         final DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
@@ -81,21 +88,20 @@ public class UserReminderActivity extends AppCompatActivity {
             @Override
             public void onDateSet(DatePicker view, int year, int monthOfYear,
                                   int dayOfMonth) {
-                // TODO Auto-generated method stub
+
                 myCalendar.set(Calendar.YEAR, year);
                 myCalendar.set(Calendar.MONTH, monthOfYear);
                 myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                textView.setText(monthOfYear+"/"+dayOfMonth+"/"+year);
+                startTextView.setText(monthOfYear + "/" + dayOfMonth + "/" + year);
             }
 
         };
 
-        textView.setOnClickListener(new View.OnClickListener() {
+        startTextView.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                // TODO Auto-generated method stub
-                System.out.println("Inside onclick");
+
                 new DatePickerDialog(UserReminderActivity.this, date, myCalendar
                         .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
                         myCalendar.get(Calendar.DAY_OF_MONTH)).show();
@@ -112,7 +118,7 @@ public class UserReminderActivity extends AppCompatActivity {
             @Override
             public void onDateSet(DatePicker view, int year, int monthOfYear,
                                   int dayOfMonth) {
-                // TODO Auto-generated method stub
+
                 myCalendar.set(Calendar.YEAR, year);
                 myCalendar.set(Calendar.MONTH, monthOfYear);
                 myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
@@ -125,8 +131,7 @@ public class UserReminderActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                // TODO Auto-generated method stub
-                System.out.println("Inside onclick");
+
                 new DatePickerDialog(UserReminderActivity.this, endDate, myEndCalendar
                         .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
                         myEndCalendar.get(Calendar.DAY_OF_MONTH)).show();
@@ -136,13 +141,18 @@ public class UserReminderActivity extends AppCompatActivity {
 
     }
 
-    public void saveUserClicked(View v){
+    public void saveUserClicked(View v) {
 
         UserReminder userReminder=new UserReminder();
-        userReminder.setStartDate(textView.getText().toString());
+
+        userReminder.setStartDate(startTextView.getText().toString());
         userReminder.setEndDate(endTextView.getText().toString());
+        userReminder.setReminderTitle(titleTextView.getText().toString());
+
         String fbName=addaFriend.getText().toString();
-        userReminder.setFriendName(fbName);
+        User friend = new User();
+        friend.setName(fbName);
+
         int i=0;
         for (i=0; i<userFriendList.getFriendName().size();i++) {
 
@@ -150,7 +160,14 @@ public class UserReminderActivity extends AppCompatActivity {
                 break;
             }
         }
-        userReminder.setFriendId(userFriendList.getFriendId().get(i));
+        friend.setId(userFriendList.getFriendId().get(i));
+        userReminder.setFriend(friend);
+
+        SQLiteDatabase db = DBConnection.getInstance().openWritableDB();
+        DatabaseManager dbManager = new DatabaseManager();
+        long id = dbManager.insertUserReminder(db, userReminder);
+        //Log
+        DBConnection.getInstance().closeDB(db);
     }
 
 }

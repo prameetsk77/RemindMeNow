@@ -3,7 +3,7 @@ package edu.asu.remindmenow.models;
 /**
  * Created by Priyama Biswas on 3/26/16.
  */
-public class ZoneReminder {
+public class ZoneReminder extends Reminder{
     String reminderTitle;
     String location;
     String startDate;
@@ -45,14 +45,6 @@ public class ZoneReminder {
 
     public String getEndTime() {
         return endTime;
-    }
-
-    public String getReminderTitle() {
-        return reminderTitle;
-    }
-
-    public void setReminderTitle(String reminderTitle) {
-        this.reminderTitle = reminderTitle;
     }
 
     public void setEndTime(String endTime) {

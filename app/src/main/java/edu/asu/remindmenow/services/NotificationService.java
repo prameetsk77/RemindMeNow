@@ -22,7 +22,8 @@ public class NotificationService {
                 new NotificationCompat.Builder(ctx)
                         .setSmallIcon(R.drawable.home_icon_1)
                         .setContentTitle("My notification")
-                        .setContentText("Hello World!");
+                        .setContentText("Hello World!")
+                        .setVibrate(new long[] { 1000, 1000, 1000, 1000, 1000 });;
 
         Intent resultIntent = new Intent(ctx, HomeActivity.class);
 

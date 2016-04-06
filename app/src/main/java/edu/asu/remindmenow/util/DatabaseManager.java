@@ -43,6 +43,20 @@ public class DatabaseManager {
     // Reminder User
     //==============================================================================================
 
+    public List<Reminder> getAllUserReminders(SQLiteDatabase db) {
+
+        Cursor cursor =  db.rawQuery( "select * from " + DBHelper.RM_REMINDER_TABLE_NAME +
+                " WHERE " + DBHelper.RM_REMINDER_TYPE +" = \"U\"", null );
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()) {
+            Log.i(TAG, "REminder - " + cursor.getString(cursor.getColumnIndex(DBHelper.RM_REMINDER_CREATED_DATE)));
+            cursor.moveToNext();
+        }
+
+
+        return null;
+    }
+
     public long insertUserReminder(SQLiteDatabase db, UserReminder reminder) {
 
         try {

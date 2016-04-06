@@ -6,6 +6,8 @@ package edu.asu.remindmenow.models;
 public class Reminder {
 
     String reminderTitle;
+    String createdDate;
+    String createdBy;
 
     public String getReminderTitle() {
         return reminderTitle;
@@ -15,4 +17,19 @@ public class Reminder {
         this.reminderTitle = reminderTitle;
     }
 
+    public String getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(String createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
 }

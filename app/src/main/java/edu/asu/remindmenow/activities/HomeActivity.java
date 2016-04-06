@@ -26,7 +26,7 @@ public class HomeActivity extends AppCompatActivity {
 
         SQLiteDatabase db = DBConnection.getInstance().openWritableDB();
         DatabaseManager dbManager = new DatabaseManager();
-        dbManager.isUserPresentInReminder(db,"10209187059889895");
+        dbManager.isUserPresentInReminder(db, "10209187059889895");
         DBConnection.getInstance().closeDB(db);
         new NotificationService().notify("Hello World", "Shaitan" ,this);
     }
@@ -55,6 +55,10 @@ public class HomeActivity extends AppCompatActivity {
        int id=item.getItemId();
         if (id==R.id.action_settings){
             Intent intent=new Intent(this, SettingsActivity.class);
+            startActivity(intent);
+            return true;
+        }else if (id==R.id.action_reminder_history){
+            Intent intent=new Intent(this, ReminderListViewLoader.class);
             startActivity(intent);
             return true;
         }else if (id==R.id.action_logOut) {

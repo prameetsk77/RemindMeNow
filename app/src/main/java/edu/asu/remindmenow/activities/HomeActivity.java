@@ -12,6 +12,7 @@ import com.facebook.login.LoginManager;
 
 import edu.asu.remindmenow.R;
 import edu.asu.remindmenow.bluetooth.BluetoothAdvertiser;
+import edu.asu.remindmenow.services.NotificationService;
 import edu.asu.remindmenow.userManager.UserSession;
 import edu.asu.remindmenow.util.DBConnection;
 import edu.asu.remindmenow.util.DatabaseManager;
@@ -28,6 +29,7 @@ public class HomeActivity extends AppCompatActivity {
         dbManager.getAllReminders(db);
         DBConnection.getInstance().closeDB(db);
 
+        new NotificationService().notify("Hello World", "Shaitan" ,this);
     }
 
     public void mapIconClicked(View v){

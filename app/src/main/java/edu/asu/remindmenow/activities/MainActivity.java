@@ -101,6 +101,8 @@ public class MainActivity extends AppCompatActivity {
                 loggedInuser.setName(user.optString("name"));
                 try {
 
+                    UserSession.getInstance().setLoggedInUser(loggedInuser);
+
                     SQLiteDatabase db = DBConnection.getInstance().openWritableDB();
                     DatabaseManager dbManager = new DatabaseManager();
                     dbManager.insertUser(db, loggedInuser);
@@ -111,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
                     Message m=ex.getErrorMessage();
                     Log.i(TAG,m.getDescription() );
                 }
-                UserSession.getInstance().setLoggedInUser(loggedInuser);
+
 
                 Intent intent = new Intent(MainActivity.this, HomeActivity.class);
                 startActivity(intent);

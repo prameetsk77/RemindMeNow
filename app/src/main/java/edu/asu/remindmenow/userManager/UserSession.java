@@ -1,5 +1,7 @@
 package edu.asu.remindmenow.userManager;
 
+import android.util.Log;
+
 import edu.asu.remindmenow.models.User;
 
 /**
@@ -11,11 +13,14 @@ public class UserSession {
 
     private static UserSession ourInstance = new UserSession();
 
+
+
     public static UserSession getInstance() {
         return ourInstance;
     }
 
     private UserSession() {
+        Log.i("Usersession", "constructor");
         loggedInUser = null;
     }
 

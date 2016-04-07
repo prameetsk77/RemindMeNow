@@ -14,6 +14,7 @@ import edu.asu.remindmenow.R;
 import edu.asu.remindmenow.bluetooth.BluetoothAdvertiser;
 import edu.asu.remindmenow.services.NotificationService;
 import edu.asu.remindmenow.userManager.UserSession;
+import edu.asu.remindmenow.userReminder.UserReminderService;
 import edu.asu.remindmenow.util.DBConnection;
 import edu.asu.remindmenow.util.DatabaseManager;
 
@@ -24,11 +25,15 @@ public class HomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        SQLiteDatabase db = DBConnection.getInstance().openWritableDB();
-        DatabaseManager dbManager = new DatabaseManager();
-        dbManager.isUserPresentInReminder(db,"10209187059889895");
-        DBConnection.getInstance().closeDB(db);
-        new NotificationService().notify("Hello World", "Shaitan" ,this);
+//        SQLiteDatabase db = DBConnection.getInstance().openWritableDB();
+//        DatabaseManager dbManager = new DatabaseManager();
+//        dbManager.isUserPresentInReminder(db,"10209187059889895");
+//        DBConnection.getInstance().closeDB(db);
+//        new NotificationService().notify("Hello World", "Shaitan", this);
+
+        // Start bluetooth service
+        startService(new Intent(this, UserReminderService.class));
+
     }
 
     public void mapIconClicked(View v){

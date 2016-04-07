@@ -39,6 +39,7 @@ public class UserReminderActivity extends AppCompatActivity {
     AutoCompleteTextView addaFriend;
 
     UserFriendList userFriendList =new UserFriendList();
+    private static String TAG = "UserReminderActivity";
 
     protected  void fetchFriendList(){
         new GraphRequest(
@@ -144,13 +145,19 @@ public class UserReminderActivity extends AppCompatActivity {
 
     public void saveUserClicked(View v) {
 
-        UserReminder userReminder=new UserReminder();
 
+
+        UserReminder userReminder=new UserReminder();
         userReminder.setStartDate(startTextView.getText().toString());
         userReminder.setEndDate(endTextView.getText().toString());
         userReminder.setReminderTitle(titleTextView.getText().toString());
-
         String fbName=addaFriend.getText().toString();
+
+        Log.i(TAG, "Start date = " + userReminder.getStartDate());
+        Log.i(TAG, "End date = " + userReminder.getEndDate());
+
+
+
         User friend = new User();
         friend.setName(fbName);
 

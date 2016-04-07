@@ -5,6 +5,7 @@ package edu.asu.remindmenow.models;
  */
 public class Reminder {
 
+    long id;
     String reminderTitle;
     String createdDate;
     String createdBy;
@@ -31,5 +32,13 @@ public class Reminder {
 
     public void setCreatedBy(String createdBy) {
         this.createdBy = createdBy;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 }

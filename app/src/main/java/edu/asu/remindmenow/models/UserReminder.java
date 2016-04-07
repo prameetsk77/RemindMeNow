@@ -5,14 +5,9 @@ package edu.asu.remindmenow.models;
  */
 public class UserReminder extends Reminder  {
 
-    long reminderId;
-
-    
     User friend;
-
     String startDate;
     String endDate;
-
 
     public String getStartDate() {
         return startDate;

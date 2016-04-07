@@ -41,6 +41,8 @@ public class BluetoothReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
+            Log.v("Bluetooth", "Action reciever");
+            mInterface.didFoundDevice("");
             if (BluetoothDevice.ACTION_FOUND.equals(action)) {
 
                 BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);

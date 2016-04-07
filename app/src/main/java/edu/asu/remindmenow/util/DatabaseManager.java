@@ -65,9 +65,13 @@ public class DatabaseManager {
         Cursor cursor =  db.rawQuery( "select * from " + DBHelper.RM_REMINDER_USER_REF_TABLE_NAME+
                 " WHERE " + DBHelper.RM_USER_ID +" = \""+userId+"\"", null );
 
+        Log.i(TAG, "select * from " + DBHelper.RM_REMINDER_USER_REF_TABLE_NAME+
+                " WHERE " + DBHelper.RM_USER_ID +" = \""+userId+"\"");
+
+        Log.i(TAG, "count "+ cursor.getCount());
         if (cursor.moveToFirst()) {
             long id = cursor.getLong(cursor.getColumnIndex(DBHelper.RM_REMINDER_ID));
-            Log.i(TAG, "Found user - " + id);
+            Log.i(TAG, "DB found user " + id);
             return id;
         }
         return -1;
@@ -125,12 +129,16 @@ public class DatabaseManager {
                     " WHERE " + DBHelper.RM_REMINDER_ID +" = \""+reminderId+"\"", null );
 
             if (cursor.moveToFirst()) {
-               UserReminder reminder = new UserReminder();
+
+                UserReminder reminder = new UserReminder();
                 reminder.setReminderTitle(cursor.getString(cursor.getColumnIndex(DBHelper.RM_REMINDER_TITLE)));
+
                 long timeId = cursor.getLong(cursor.getColumnIndex(DBHelper.RM_REMINDER_TIME_ID));
                 Time time = getTime(db, timeId);
+                reminder.setStartDate(time.getStartDate());
+                reminder.setEndDate(time.getEndDate());
 
-                //reminder.setStartDate(cursor.getString(cursor.getColumnIndex(DBHelper.RM_Reminder_)));
+                return reminder;
 
             }
             return null;

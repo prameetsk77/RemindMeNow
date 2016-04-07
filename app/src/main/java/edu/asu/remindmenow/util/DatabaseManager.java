@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import edu.asu.remindmenow.exception.ApplicationRuntimeException;
@@ -31,16 +32,18 @@ public class DatabaseManager {
 
         Cursor cursor =  db.rawQuery( "select * from " + DBHelper.RM_REMINDER_TABLE_NAME, null );
         cursor.moveToFirst();
+        List<Reminder> reminderList=new ArrayList<Reminder>();
         while (!cursor.isAfterLast()) {
-            String reminderType = cursor.getString(cursor.getColumnIndex(DBHelper.RM_REMINDER_TYPE));
-            if (reminderType.equals("U")) {
-
-            }
+            Reminder reminder=new Reminder();
+            reminder.setReminderTitle(cursor.getString(cursor.getColumnIndex(DBHelper.RM_REMINDER_TITLE)));
+//            String reminderType = cursor.getString(cursor.getColumnIndex(DBHelper.RM_REMINDER_TYPE));
+//            if (reminderType.equals("U")) {
+//
+//            }
+            reminderList.add(reminder);
             cursor.moveToNext();
         }
-
-
-        return null;
+        return reminderList;
     }
 
     //==============================================================================================

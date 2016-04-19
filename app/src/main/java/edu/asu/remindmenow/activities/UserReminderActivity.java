@@ -21,6 +21,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.ParseException;
 import java.util.Calendar;
 
 import edu.asu.remindmenow.R;
@@ -29,6 +30,7 @@ import edu.asu.remindmenow.models.UserFriendList;
 import edu.asu.remindmenow.models.UserReminder;
 import edu.asu.remindmenow.util.DBConnection;
 import edu.asu.remindmenow.util.DatabaseManager;
+import edu.asu.remindmenow.util.DateUtilities;
 
 public class UserReminderActivity extends AppCompatActivity {
 
@@ -147,8 +149,6 @@ public class UserReminderActivity extends AppCompatActivity {
 
     public void saveUserClicked(View v) {
 
-
-
         UserReminder userReminder=new UserReminder();
         userReminder.setStartDate(startTextView.getText().toString());
         userReminder.setEndDate(endTextView.getText().toString());
@@ -163,24 +163,79 @@ public class UserReminderActivity extends AppCompatActivity {
         User friend = new User();
         friend.setName(fbName);
 
-        int i=0;
-        for (i=0; i<userFriendList.getFriendName().size();i++) {
+        if (friend.getName() != null && friend.getName().equals("") == false) {
+            int i=0;
+            for (; i<userFriendList.getFriendName().size() ; i++) {
 
-            if (userFriendList.getFriendName().get(i).equals(fbName)) {
-                break;
+                if (userFriendList.getFriendName().get(i).equals(fbName)) {
+                    break;
+                }
             }
-        }
-        friend.setId(userFriendList.getFriendId().get(i));
-        Log.i(TAG, "User id = " + friend.getId());
-        userReminder.setFriend(friend);
+            if (i == userFriendList.getFriendId().size()) {
 
-        SQLiteDatabase db = DBConnection.getInstance().openWritableDB();
-        DatabaseManager dbManager = new DatabaseManager();
-        long id = dbManager.insertUserReminder(db, userReminder);
-        //Log
-        DBConnection.getInstance().closeDB(db);
-        Toast.makeText(UserReminderActivity.this, "Reminder saved", Toast.LENGTH_SHORT).show();
-        finish();
+            } else {
+                friend.setId(userFriendList.getFriendId().get(i));
+                Log.i(TAG, "User id = " + friend.getId());
+                userReminder.setFriend(friend);
+            }
+
+        }
+
+
+        if (validateInput(userReminder)) {
+            SQLiteDatabase db = DBConnection.getInstance().openWritableDB();
+            DatabaseManager dbManager = new DatabaseManager();
+            long id = dbManager.insertUserReminder(db, userReminder);
+            //Log
+            DBConnection.getInstance().closeDB(db);
+            Toast.makeText(UserReminderActivity.this, "Reminder saved", Toast.LENGTH_SHORT).show();
+            finish();
+        }
+
+    }
+
+    public boolean validateInput(UserReminder userReminder) {
+
+        if (userReminder.getReminderTitle() == null ||
+                userReminder.getReminderTitle().equals("")) {
+            Toast.makeText(UserReminderActivity.this, "Please enter the title of the reminder.", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        if (userReminder.getStartDate() == null ||
+                userReminder.getStartDate().equals("")) {
+            Toast.makeText(UserReminderActivity.this, "Please enter the start date of the reminder", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        if (userReminder.getEndDate() == null ||
+                userReminder.getEndDate().equals("")) {
+            Toast.makeText(UserReminderActivity.this, "Please enter the end date of the reminder..", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        if (userReminder.getFriend() == null ||
+                userReminder.getFriend().getName().equals("")) {
+            Toast.makeText(UserReminderActivity.this, "Please enter the user to be reminder of.", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        // Date range validation
+        try {
+            if (DateUtilities.isPastDate(userReminder.getEndDate()) == true) {
+                Toast.makeText(UserReminderActivity.this, "Please enter a future date as end date.", Toast.LENGTH_SHORT).show();
+                return false;
+            }
+
+            if (DateUtilities.isDateInOrder(userReminder.getStartDate(), userReminder.getEndDate()) == false) {
+                Toast.makeText(UserReminderActivity.this, "Please enter a valid date range.", Toast.LENGTH_SHORT).show();
+                return false;
+            }
+        } catch (ParseException ex) {
+            ex.printStackTrace();
+        }
+
+        return true;
     }
 
 }

@@ -13,7 +13,7 @@ public class User {
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.name = name.replaceAll("\\s","");
     }
 
     public String getId() {

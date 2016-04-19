@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -26,6 +27,7 @@ import java.util.Calendar;
 
 import edu.asu.remindmenow.Geofence.GeofenceIntentService;
 import edu.asu.remindmenow.R;
+import edu.asu.remindmenow.models.UserReminder;
 import edu.asu.remindmenow.models.ZoneReminder;
 
 /**
@@ -221,5 +223,29 @@ public class GeofenceReminderActivity extends AppCompatActivity implements Googl
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
         Log.i(TAG, "Connection failed: ConnectionResult.getErrorCode() = " + connectionResult.getErrorCode());
+    }
+
+
+    public boolean validateInput(ZoneReminder zoneReminder) {
+
+        if (zoneReminder.getReminderTitle() == null ||
+                zoneReminder.getReminderTitle().equals("")) {
+            Toast.makeText(this, "Please enter the title of the reminder.", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        if (zoneReminder.getStartDate() == null ||
+                zoneReminder.getStartDate().equals("")) {
+            Toast.makeText(this, "Please enter the start date of the reminder", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        if (zoneReminder.getEndDate() == null ||
+                zoneReminder.getEndDate().equals("")) {
+            Toast.makeText(this, "Please enter the end date of the reminder..", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        return true;
     }
 }

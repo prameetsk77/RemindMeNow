@@ -11,7 +11,8 @@
         android:id="@+id/editText"
         android:hint="Title"
         android:textStyle="italic"
-        android:textSize="45dp" />
+        android:textSize="45dp"
+        android:singleLine="true" />
 
 
     <LinearLayout
@@ -71,7 +72,8 @@
                 android:textSize="30dp"
                 android:textColor="#ffffff"
                 android:textColorHint="#D1D7BF"
-                android:paddingLeft="30dp" />
+                android:paddingLeft="30dp"
+                android:singleLine="true" />
 
             <EditText
                 android:layout_width="wrap_content"
@@ -85,7 +87,8 @@
                 android:textColorHint="#D1D7BF"
                 android:layout_weight="0.64"
                 android:gravity="right"
-                android:paddingRight="30dp" />
+                android:paddingRight="30dp"
+                android:singleLine="true" />
 
         </LinearLayout>
 
@@ -107,7 +110,8 @@
                 android:textSize="30dp"
                 android:textColor="#ffffff"
                 android:textColorHint="#D1D7BF"
-                android:paddingLeft="30dp" />
+                android:paddingLeft="30dp"
+                android:singleLine="true" />
 
             <EditText
                 android:layout_width="wrap_content"
@@ -121,7 +125,8 @@
                 android:textColorHint="#D1D7BF"
                 android:layout_weight="1"
                 android:gravity="right"
-                android:paddingRight="30dp" />
+                android:paddingRight="30dp"
+                android:singleLine="true" />
 
 
         </LinearLayout>

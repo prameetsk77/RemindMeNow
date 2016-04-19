@@ -29,4 +29,14 @@ public class DateUtilities {
         Log.i("DateUtil", "Current date " + c.getTime());
         return givenDate.after(c.getTime());
     }
+
+    public static boolean isDateInOrder (String startDate, String endDate) throws ParseException {
+        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+        Date startDateObj = sdf.parse(startDate);
+        Date endDateObj = sdf.parse(endDate);
+
+        Log.i("DateUtil", "isDateInOrder " + startDateObj.toString() + " " + endDateObj.toString());
+
+        return endDateObj.after(startDateObj) || startDate.equals(endDate);
+    }
 }

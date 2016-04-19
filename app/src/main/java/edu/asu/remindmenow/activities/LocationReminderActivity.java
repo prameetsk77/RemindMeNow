@@ -6,10 +6,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import java.util.Calendar;
 
 import edu.asu.remindmenow.R;
+import edu.asu.remindmenow.models.LocationReminder;
+import edu.asu.remindmenow.models.ZoneReminder;
 
 public class LocationReminderActivity extends AppCompatActivity {
 
@@ -82,6 +85,29 @@ public class LocationReminderActivity extends AppCompatActivity {
         });
 
 
+    }
+
+    public boolean validateInput(LocationReminder locationReminder) {
+
+        if ( locationReminder.getReminderTitle() == null ||
+                locationReminder.getReminderTitle().equals("")) {
+            Toast.makeText(this, "Please enter the title of the reminder.", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        if ( locationReminder.getStartDate() == null ||
+                locationReminder.getStartDate().equals("")) {
+            Toast.makeText(this, "Please enter the start date of the reminder", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        if ( locationReminder.getEndDate() == null ||
+                locationReminder.getEndDate().equals("")) {
+            Toast.makeText(this, "Please enter the end date of the reminder..", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        return true;
     }
 
 }

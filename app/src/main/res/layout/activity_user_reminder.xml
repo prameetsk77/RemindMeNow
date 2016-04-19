@@ -12,7 +12,8 @@
 
             android:hint="Title"
             android:textStyle="italic"
-            android:textSize="45dp" />
+            android:textSize="45dp"
+            android:singleLine="true" />
 
 
     <LinearLayout
@@ -38,7 +39,8 @@
         android:layout_centerHorizontal="true"
         android:textSize="30dp"
         android:textColor="#ffffff"
-        android:textColorHint="#D1D7BF" />
+        android:textColorHint="#D1D7BF"
+        android:singleLine="true" />
 
     <EditText
         android:layout_width="wrap_content"
@@ -51,7 +53,8 @@
         android:layout_centerHorizontal="true"
         android:textSize="30dp"
         android:textColor="#ffffff"
-        android:textColorHint="#D1D7BF" />
+        android:textColorHint="#D1D7BF"
+        android:singleLine="true" />
 
     <EditText
         android:layout_width="wrap_content"
@@ -65,7 +68,8 @@
         android:layout_alignStart="@+id/button"
         android:textSize="30dp"
         android:textColor="#ffffff"
-        android:textColorHint="#D1D7BF" />
+        android:textColorHint="#D1D7BF"
+        android:singleLine="true" />
 
     </LinearLayout>
 

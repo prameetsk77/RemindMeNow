@@ -156,6 +156,12 @@ public class DatabaseManager {
 
     }
 
+    public void deleteUserReminder(long reminderId) {
+//        String table = "beaconTable";
+//        String whereClause = "_id" + "=?";
+//        String[] whereArgs = new String[] { String.valueOf(row) };
+//        db.delete(table, whereClause, whereArgs);
+    }
 
     //==============================================================================================
     // Reminder Zone

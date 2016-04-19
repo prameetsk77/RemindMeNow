@@ -8,11 +8,10 @@
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/editText"
+        android:id="@+id/Title"
         android:hint="Title"
         android:textStyle="italic"
         android:textSize="45dp" />
-
 
     <LinearLayout
         android:orientation="vertical"

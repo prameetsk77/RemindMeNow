@@ -6,7 +6,6 @@ import com.google.android.gms.maps.model.LatLng;
  * Created by Priyama Biswas on 3/26/16.
  */
 public class ZoneReminder extends Reminder{
-    String reminderTitle;
     String location;
     String startDate;
     String endDate;
@@ -60,5 +59,10 @@ public class ZoneReminder extends Reminder{
 
     public void setEndTime(String endTime) {
         this.endTime = endTime;
+    }
+
+    @Override
+    public String toString() {
+        return getReminderTitle()+ getStartDate() + getEndDate() + getStartTime() + getEndTime() + getLocation() + getCoordinates().toString();
     }
 }

@@ -2,6 +2,7 @@ package edu.asu.remindmenow.activities;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -9,6 +10,7 @@ import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -24,6 +26,8 @@ import java.util.Calendar;
 import edu.asu.remindmenow.Geofence.GeofenceIntentService;
 import edu.asu.remindmenow.R;
 import edu.asu.remindmenow.models.ZoneReminder;
+import edu.asu.remindmenow.util.DBConnection;
+import edu.asu.remindmenow.util.DatabaseManager;
 
 /**
  * Created by priyama on 3/21/2016.
@@ -34,8 +38,10 @@ public class GeofenceReminderActivity extends AppCompatActivity implements Googl
     EditText endTextView;
     EditText timeTextView;
     EditText endTimeTextView;
+    EditText title;
 
     String TAG = "GeoFence";
+    String locationName;
     long endTimeMillis;
     LatLng coordinates;
 
@@ -49,6 +55,7 @@ public class GeofenceReminderActivity extends AppCompatActivity implements Googl
         textView = (EditText) findViewById(R.id.dateTextView);
         final Calendar myCalendar = Calendar.getInstance();
         timeTextView = (EditText) findViewById(R.id.timeTextView);
+        title = (EditText) findViewById(R.id.Title);
 
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
@@ -65,6 +72,7 @@ public class GeofenceReminderActivity extends AppCompatActivity implements Googl
         @Override
         public void onPlaceSelected(Place place) {
             // TODO: Get info about the selected place.
+            locationName = place.getName().toString();
             coordinates = place.getLatLng();
             Log.i(TAG, "Place: " + place.getName());
         }
@@ -183,12 +191,23 @@ public class GeofenceReminderActivity extends AppCompatActivity implements Googl
     public void saveGeofenceClicked(View v){
         ZoneReminder geofenceReminder = new ZoneReminder();
         geofenceReminder.setCoordinates(coordinates);
+        geofenceReminder.setReminderTitle(title.getText().toString());
+        geofenceReminder.setLocation(locationName);
         geofenceReminder.setStartDate(textView.getText().toString());
         geofenceReminder.setEndDate(endTextView.getText().toString());
         geofenceReminder.setStartTime(timeTextView.getText().toString());
         geofenceReminder.setEndTime(endTimeTextView.getText().toString());
         System.out.println("geo " + geofenceReminder.getEndTime());
-        geofenceService.addGeofence(coordinates,endTimeMillis , mGoogleApiClient, this);
+        geofenceService.addGeofence(geofenceReminder,endTimeMillis , mGoogleApiClient, this);
+
+        SQLiteDatabase db = DBConnection.getInstance().openWritableDB();
+        DatabaseManager dbManager = new DatabaseManager();
+        long id = dbManager.insertZoneReminder(db, geofenceReminder);
+        //Log
+        Log.e(TAG, "Zone Reminder ID: " + id + " added.");
+        DBConnection.getInstance().closeDB(db);
+        Toast.makeText(this, "Reminder saved", Toast.LENGTH_SHORT).show();
+        finish();
     }
 
     @Override

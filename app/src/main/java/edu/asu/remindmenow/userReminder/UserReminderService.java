@@ -33,6 +33,7 @@ public class UserReminderService extends Service implements BluetoothReceiver.Bl
     private BluetoothAdvertiser mAdvertiser;
     private BluetoothReceiver mReceiver;
     private static String TAG = "UserReminderService";
+    Handler handler = new Handler();
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -108,6 +109,13 @@ public class UserReminderService extends Service implements BluetoothReceiver.Bl
 
     @Override
     public void didFinishDiscovery() {
-        startDiscovery();
+
+        handler.postDelayed(new Runnable(){
+            @Override
+            public void run(){
+                startDiscovery();
+            }
+        }, 3000);
+
     }
 }

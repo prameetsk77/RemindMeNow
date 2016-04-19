@@ -18,6 +18,8 @@ import com.google.android.gms.maps.model.LatLng;
 import java.util.ArrayList;
 
 import edu.asu.remindmenow.activities.GeofenceReminderActivity;
+import edu.asu.remindmenow.models.ZoneReminder;
+import edu.asu.remindmenow.services.NotificationService;
 
 /**
  * Created by Prameet Singh on 4/17/2016.
@@ -34,8 +36,9 @@ public class GeofenceIntentService implements GoogleApiClient.OnConnectionFailed
 
     GeofenceReminderActivity caller ;
 
-    public void addGeofence(LatLng coordinates, long endTime ,GoogleApiClient mGoogleApiClient, GeofenceReminderActivity activity) {
+    public void addGeofence(ZoneReminder reminder , long endTime , GoogleApiClient mGoogleApiClient, GeofenceReminderActivity activity) {
 
+        LatLng coordinates = reminder.getCoordinates();
         caller = activity ;
         this.mGoogleApiClient = mGoogleApiClient;
         mGeofenceList = new ArrayList<Geofence>();
@@ -43,7 +46,7 @@ public class GeofenceIntentService implements GoogleApiClient.OnConnectionFailed
         mGeofenceList.add(new Geofence.Builder()
                 // Set the request ID of the geofence. This is a string to identify this
                 // geofence.
-                .setRequestId(String.valueOf(coordinates.hashCode()))
+                .setRequestId(reminder.toString())
                 .setCircularRegion(
                         coordinates.latitude,
                         coordinates.longitude,
@@ -63,6 +66,10 @@ public class GeofenceIntentService implements GoogleApiClient.OnConnectionFailed
             Toast.makeText(caller, "Geofence Client not Connected", Toast.LENGTH_SHORT).show();
             return;
         }
+        else{
+            Toast.makeText(caller, "Geofence Client Connected", Toast.LENGTH_SHORT).show();
+            new NotificationService().notify("GEOFENCE","Geofence Client Connected", caller);
+        }
 
         try {
             LocationServices.GeofencingApi.addGeofences(
@@ -76,9 +83,24 @@ public class GeofenceIntentService implements GoogleApiClient.OnConnectionFailed
             ).setResultCallback(this); // Result processed in onResult().
         } catch (SecurityException securityException) {
             // Catch exception generated if the app does not use ACCESS_FINE_LOCATION permission.
+            Toast.makeText(caller, "Security Exception " + securityException, Toast.LENGTH_SHORT).show();
             logSecurityException(securityException);
         }
     }
+
+/*
+    //Deleting Zone Reminder
+    public void removeGeofence(ArrayList <String> ReqID){
+
+        LocationServices.GeofencingApi.removeGeofences(
+            mGoogleApiClient,
+            // This is the same RequestID as given below. See addGeofence() for how requestID is formulated
+                ReqID
+        ).setResultCallback(this); // Result processed in onResult().
+
+        // Delete From Database. Ask @Jithin Roy For it
+    }
+*/
 
     private void logSecurityException(SecurityException securityException) {
         Log.e(TAG, "Invalid location permission. " +
@@ -95,6 +117,8 @@ public class GeofenceIntentService implements GoogleApiClient.OnConnectionFailed
     private PendingIntent getGeofencePendingIntent() {
         // Reuse the PendingIntent if we already have it.
         if (mGeofencePendingIntent != null) {
+            Toast.makeText(caller, "mGeofencePendingIntent != null", Toast.LENGTH_LONG).show();
+
             return mGeofencePendingIntent;
         }
         Intent intent = new Intent(caller.getApplicationContext(), GeofenceTransitionsIntentService.class);
@@ -137,4 +161,5 @@ public class GeofenceIntentService implements GoogleApiClient.OnConnectionFailed
             //Log.e(TAG, "Error at On Result");
         }
     }
+
 }

@@ -6,15 +6,19 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import edu.asu.remindmenow.exception.ApplicationRuntimeException;
+import edu.asu.remindmenow.models.LocationReminder;
 import edu.asu.remindmenow.models.Message;
 import edu.asu.remindmenow.models.Reminder;
 import edu.asu.remindmenow.models.Time;
 import edu.asu.remindmenow.models.User;
 import edu.asu.remindmenow.models.UserReminder;
+import edu.asu.remindmenow.models.ZoneReminder;
 import edu.asu.remindmenow.userManager.UserSession;
 
 /**
@@ -88,8 +92,6 @@ public class DatabaseManager {
             ContentValues contentValues = new ContentValues();
 
             // Create time entry
-            contentValues.put(DBHelper.RM_TIME_START_DATE,reminder.getStartDate());
-            contentValues.put(DBHelper.RM_TIME_END_DATE, reminder.getEndDate());
             long timeId = insertTime(db,reminder.getStartDate(), reminder.getEndDate(), null, null);
 
             // Create reminder entry
@@ -119,7 +121,6 @@ public class DatabaseManager {
             message.setDescription(ex.getMessage());
             throw new ApplicationRuntimeException(message);
         }
-
     }
 
 
@@ -167,8 +168,139 @@ public class DatabaseManager {
     // Reminder Zone
     //==============================================================================================
 
+    public List<ZoneReminder> getAllZoneReminders(SQLiteDatabase db) {
+
+        ArrayList<ZoneReminder> zoneReminderList = new ArrayList<ZoneReminder>();
+
+        Cursor cursor =  db.rawQuery( "select * from " + DBHelper.RM_REMINDER_TABLE_NAME +
+                " WHERE " + DBHelper.RM_REMINDER_TYPE +" = \"Z\"", null );
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()) {
+            Log.i(TAG, "Reminder - " + cursor.getString(cursor.getColumnIndex(DBHelper.RM_REMINDER_CREATED_DATE)));
+            long reminderID = cursor.getLong(cursor.getColumnIndex(DBHelper.RM_REMINDER_ID));
+            ZoneReminder reminder = getZoneReminderFromRemID(db, reminderID);
+
+            if(reminder == null)
+                Log.e(TAG, "reminder == nul in getAllZoneReminders");
+            else
+                zoneReminderList.add(reminder);
+            cursor.moveToNext();
+        }
+
+        return zoneReminderList;
+    }
+
+        public long insertZoneReminder(SQLiteDatabase db, ZoneReminder reminder) {
+
+        try {
+
+            ContentValues contentValues = new ContentValues();
+
+            // Create time entry
+            long timeId = insertTime(db,reminder.getStartDate(), reminder.getEndDate(),
+                    reminder.getStartTime(), reminder.getEndTime());
+
+            // Create reminder entry
+            contentValues = new ContentValues();
+            contentValues.put(DBHelper.RM_REMINDER_TYPE,"Z");
+            contentValues.put(DBHelper.RM_REMINDER_TIME_ID,timeId);
+            contentValues.put(DBHelper.RM_REMINDER_TITLE,reminder.getReminderTitle());
+            contentValues.put(DBHelper.RM_REMINDER_CREATED_DATE,System.currentTimeMillis());
+            contentValues.put(DBHelper.RM_REMINDER_CREATED_BY, UserSession.getInstance().getLoggedInUser().getId());
+            long reminderId = db.insertOrThrow(DBHelper.RM_REMINDER_TABLE_NAME, null, contentValues);
+
+            // Creare reminder-user ref entry
+            contentValues = new ContentValues();
+            contentValues.put(DBHelper.RM_LOC_LAT,reminder.getCoordinates().latitude);
+            contentValues.put(DBHelper.RM_LOC_LONG,reminder.getCoordinates().longitude);
+            contentValues.put(DBHelper.RM_LOC_ADDRESS,reminder.getLocation());
+            long locId = db.insertOrThrow(DBHelper.RM_LOCATION_TABLE_NAME, null, contentValues);
+
+            contentValues = new ContentValues();
+            contentValues.put(DBHelper.RM_REMINDER_ID,reminderId);
+            contentValues.put(DBHelper.RM_LOC_ID,locId);
+            db.insertOrThrow(DBHelper.RM_REMINDER_LOC_REF_TABLE_NAME, null, contentValues);
+
+            db.close();
+            return reminderId;
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            String errorCode = ApplicationConstants.SYSTEM_FAILURE;
+            Message message = new Message();
+            message.setCode(errorCode);
+            message.setDescription(ex.getMessage());
+            throw new ApplicationRuntimeException(message);
+        }
+
+    }
 
 
+    public ZoneReminder getZoneReminderFromRemID(SQLiteDatabase db, long reminderId) {
+
+        try {
+
+            Cursor cursor =  db.rawQuery( "select * from " + DBHelper.RM_REMINDER_TABLE_NAME+
+                    " WHERE " + DBHelper.RM_REMINDER_ID +" = \""+reminderId+"\"", null );
+
+            if (cursor.moveToFirst()) {
+
+                ZoneReminder reminder = new ZoneReminder();
+                reminder.setReminderTitle(cursor.getString(cursor.getColumnIndex(DBHelper.RM_REMINDER_TITLE)));
+
+                long timeId = cursor.getLong(cursor.getColumnIndex(DBHelper.RM_REMINDER_TIME_ID));
+                Time time = getTime(db, timeId);
+                reminder.setStartTime(time.getStartTime());
+                reminder.setEndTime(time.getEndTime());
+                reminder.setStartDate(time.getStartDate());
+                reminder.setEndDate(time.getEndDate());
+                reminder.setReminderTitle(cursor.getString(cursor.getColumnIndex(DBHelper.RM_REMINDER_TITLE)));
+                setZoneReminderAddress(db, reminderId, reminder);
+                return reminder;
+            }
+            return null;
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            String errorCode = ApplicationConstants.SYSTEM_FAILURE;
+            Message message = new Message();
+            message.setCode(errorCode);
+            message.setDescription(ex.getMessage());
+            throw new ApplicationRuntimeException(message);
+        }
+
+    }
+
+    private void setZoneReminderAddress(SQLiteDatabase db, long reminderId, ZoneReminder reminder){
+        try {
+
+            Cursor cursor =  db.rawQuery( "select * from " + DBHelper.RM_REMINDER_LOC_REF_TABLE_NAME+
+                    " WHERE " + DBHelper.RM_REMINDER_ID +" = \""+reminderId+"\"", null );
+
+            if (cursor.moveToFirst()) {
+                long loc_id = (cursor.getLong(cursor.getColumnIndex(DBHelper.RM_LOC_ID)));
+
+                cursor =  db.rawQuery( "select * from " + DBHelper.RM_LOCATION_TABLE_NAME +
+                        " WHERE " + DBHelper.RM_LOC_ID +" = \""+loc_id+"\"", null );
+                if (cursor.moveToFirst()) {
+                    double latitude = (cursor.getDouble(cursor.getColumnIndex(DBHelper.RM_LOC_LAT)));
+                    double longitude = (cursor.getDouble(cursor.getColumnIndex(DBHelper.RM_LOC_LONG)));
+                    LatLng coordinates = new LatLng(latitude,longitude);
+                    reminder.setCoordinates(coordinates);
+                    reminder.setLocation((cursor.getString(cursor.getColumnIndex(DBHelper.RM_LOC_ADDRESS))));
+                }
+            }
+            return;
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            String errorCode = ApplicationConstants.SYSTEM_FAILURE;
+            Message message = new Message();
+            message.setCode(errorCode);
+            message.setDescription(ex.getMessage());
+            throw new ApplicationRuntimeException(message);
+        }
+    }
     //==============================================================================================
     // Reminder Loc
     //==============================================================================================

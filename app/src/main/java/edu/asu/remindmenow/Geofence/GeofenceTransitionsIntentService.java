@@ -55,6 +55,7 @@ public class GeofenceTransitionsIntentService extends IntentService {
         if (geofencingEvent.hasError()) {
             String errorMessage = GeofenceErrorMessages.getErrorString(this,
                     geofencingEvent.getErrorCode());
+            new NotificationService().notify("GEOFENCE", "ERROR " + errorMessage , this);
             Log.e(TAG, errorMessage);
             return;
         }
@@ -78,12 +79,25 @@ public class GeofenceTransitionsIntentService extends IntentService {
             );
 
             // Send notification and log the transition details.
-            sendNotification(geofenceTransitionDetails);
+            //sendNotification(geofenceTransitionDetails);
+
+            List<Geofence> geofenceList = geofencingEvent.getTriggeringGeofences();
+            /*
+            for(int i=0;i<geofenceList.size();i++) {
+                String ID = geofenceList.get(i).getRequestId();
+                //find from database function and delete
+                if (deletefromdatabase()) {
+
+                    //remove from google API
+                }
+
+            }
+            */
+            new NotificationService().notify("GEOFENCE", "In Zone: " + geofenceTransitionDetails , this);
             Log.i(TAG, geofenceTransitionDetails);
         } else {
             // Log the error.
-            Log.e(TAG, getString(R.string.geofence_transition_invalid_type,
-                    geofenceTransition));
+            Log.e(TAG, "Invalid Transition");
         }
 
     }

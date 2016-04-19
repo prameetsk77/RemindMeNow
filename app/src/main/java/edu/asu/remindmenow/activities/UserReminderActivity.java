@@ -36,6 +36,7 @@ public class UserReminderActivity extends AppCompatActivity {
     EditText titleTextView;
     EditText startTextView;
     EditText endTextView;
+
     AutoCompleteTextView addaFriend;
 
     UserFriendList userFriendList =new UserFriendList();
@@ -94,7 +95,8 @@ public class UserReminderActivity extends AppCompatActivity {
                 myCalendar.set(Calendar.YEAR, year);
                 myCalendar.set(Calendar.MONTH, monthOfYear);
                 myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                startTextView.setText(monthOfYear + "/" + dayOfMonth + "/" + year);
+//                myCalendar.
+                startTextView.setText(monthOfYear + 1 + "/" + dayOfMonth + "/" + year);
             }
 
         };
@@ -124,7 +126,7 @@ public class UserReminderActivity extends AppCompatActivity {
                 myCalendar.set(Calendar.YEAR, year);
                 myCalendar.set(Calendar.MONTH, monthOfYear);
                 myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                endTextView.setText(monthOfYear+"/"+dayOfMonth+"/"+year);
+                endTextView.setText(monthOfYear + 1+"/"+dayOfMonth +"/"+year);
             }
 
         };

@@ -6,7 +6,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.facebook.AccessToken;
 import com.facebook.AccessTokenTracker;
@@ -42,6 +41,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         UserSession.getInstance().setContext(this.getApplicationContext());
         Log.i(TAG, "Create main activity");
+
+
         DBConnection.getInstance().setContext(getApplicationContext());
 
         FacebookSdk.sdkInitialize(this.getApplicationContext());

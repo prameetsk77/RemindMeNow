@@ -90,6 +90,8 @@ public class UserReminderService extends Service implements BluetoothReceiver.Bl
         try {
             // Get the reminder
             if (remId > 0) {
+
+                Log.i(TAG, "Found user with reminder " + userId);
                 UserReminder reminder = dbManager.getReminder(db, remId);
                 if (DateUtilities.isPastDate(reminder.getEndDate()) == false &&
                         DateUtilities.isFutureDate(reminder.getStartDate()) == false) {

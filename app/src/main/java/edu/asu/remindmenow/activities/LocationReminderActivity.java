@@ -34,7 +34,7 @@ public class LocationReminderActivity extends AppCompatActivity {
                 myCalendar.set(Calendar.YEAR, year);
                 myCalendar.set(Calendar.MONTH, monthOfYear);
                 myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                textView.setText(monthOfYear+"/"+dayOfMonth+"/"+year);
+                textView.setText(monthOfYear+1+"/"+dayOfMonth+"/"+year);
             }
 
         };
@@ -64,7 +64,7 @@ public class LocationReminderActivity extends AppCompatActivity {
                 myCalendar.set(Calendar.YEAR, year);
                 myCalendar.set(Calendar.MONTH, monthOfYear);
                 myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                endTextView.setText(monthOfYear+"/"+dayOfMonth+"/"+year);
+                endTextView.setText(monthOfYear+1+"/"+dayOfMonth+"/"+year);
             }
 
         };

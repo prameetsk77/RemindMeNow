@@ -109,7 +109,6 @@ public class DatabaseManager {
             contentValues.put(DBHelper.RM_USER_ID,friendId);
             contentValues.put(DBHelper.RM_REMINDER_ID,reminderId);
             db.insertOrThrow(DBHelper.RM_REMINDER_USER_REF_TABLE_NAME, null, contentValues);
-            db.close();
             return reminderId;
 
         } catch (Exception ex) {
@@ -233,8 +232,9 @@ public class DatabaseManager {
             ContentValues contentValues = new ContentValues();
             contentValues.put(DBHelper.RM_USER_ID, user.getId());
             contentValues.put(DBHelper.RM_USER_NAME, user.getName());
+            long userId = Long.parseLong(user.getId());
             long id = db.insertOrThrow(DBHelper.RM_USER_TABLE_NAME, null, contentValues);
-            return id;
+            return userId;
 
         } catch (Exception ex) {
 
@@ -251,6 +251,7 @@ public class DatabaseManager {
 
         Cursor res =  db.rawQuery( "select * from rm_user where " +DBHelper.RM_USER_ID +" = "+id+"", null );
         if (res.moveToFirst()) {
+            Log.i(TAG, "Found user inside getUser");
             User user = new User();
             user.setId(res.getString(res.getColumnIndex(DBHelper.RM_USER_ID)));
             user.setName(res.getString(res.getColumnIndex(DBHelper.RM_USER_NAME)));

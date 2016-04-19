@@ -33,6 +33,13 @@ public class BluetoothReceiver {
         mBluetoothAdapter.startDiscovery();
     }
 
+    public void stopDiscovery () {
+        if (isDiscovering()) {
+            mBluetoothAdapter.cancelDiscovery();
+        }
+    }
+
+
     public boolean isDiscovering() {
         return  mBluetoothAdapter.isDiscovering();
     }
@@ -41,18 +48,20 @@ public class BluetoothReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
-            Log.v("Bluetooth", "Action reciever");
-            mInterface.didFoundDevice("");
+
             if (BluetoothDevice.ACTION_FOUND.equals(action)) {
 
                 BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-                String derp = device.getName() + " - " + device.getAddress();
+                String derp = device.getName();
+                if (derp != null) {
+                    Log.v("Bluetooth", derp);
+                    if (derp.startsWith("RM_")) {
+                        Log.v("Bluetooth", "Entered the Found " + derp);
+                        mInterface.didFoundDevice(derp);
 
-                if (derp.startsWith("RM_")) {
-                    Log.v("Bluetooth", "Entered the Found " + derp);
-                    mInterface.didFoundDevice(derp);
-
+                    }
                 }
+
 
             } else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
                 Log.v("Bluetooth", "Entered the Finished ");

@@ -1,5 +1,7 @@
 package edu.asu.remindmenow.models;
 
+import com.google.android.gms.maps.model.LatLng;
+
 /**
  * Created by Priyama Biswas on 3/26/16.
  */
@@ -10,6 +12,15 @@ public class ZoneReminder extends Reminder{
     String endDate;
     String startTime;
     String endTime;
+
+    LatLng coordinates;
+
+    public LatLng getCoordinates(){return coordinates;}
+
+    public void setCoordinates(LatLng coordinates){this.coordinates = coordinates;
+    String a = coordinates.toString();
+
+    }
 
     public String getLocation() {
         return location;

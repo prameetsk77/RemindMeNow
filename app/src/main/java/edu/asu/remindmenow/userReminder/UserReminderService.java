@@ -56,7 +56,7 @@ public class UserReminderService extends Service implements BluetoothReceiver.Bl
         String advId = "RM_"+userID;
         mAdvertiser = new BluetoothAdvertiser(this);
         mAdvertiser.startAdvertising(advId);
-
+        
     }
 
     private void startDiscovery () {

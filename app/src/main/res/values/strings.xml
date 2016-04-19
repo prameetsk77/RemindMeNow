@@ -8,4 +8,13 @@
     <string name="action_reminder_history">All Reminders</string>
     <string name="facebook_app_id">442023749319578</string>
 
+    <string name="geofence_not_available">Geo Fence Unavailable</string>
+    <string name="geofence_too_many_geofences">Too many GeoFences</string>
+    <string name="geofence_too_many_pending_intents">Too many Pending Intents</string>
+    <string name="unknown_geofence_error">Unknown Geo Fence</string>
+    <string name="geofence_transition_invalid_type">Geofence Transition is Invalid</string>
+    <string name="geofence_transition_entered">Entered Geofence Area</string>
+    <string name="geofence_transition_exited">Exited Geofence Area</string>
+    <string name="unknown_geofence_transition">Unknown Geofence Transition</string>
+
 </resources>

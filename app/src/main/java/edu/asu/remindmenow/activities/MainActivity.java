@@ -40,8 +40,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-            DBConnection.getInstance().setContext(getApplicationContext());
+        UserSession.getInstance().setContext(this.getApplicationContext());
+        Log.i(TAG, "Create main activity");
+        DBConnection.getInstance().setContext(getApplicationContext());
 
         FacebookSdk.sdkInitialize(this.getApplicationContext());
         callbackManager = CallbackManager.Factory.create();
@@ -108,15 +109,14 @@ public class MainActivity extends AppCompatActivity {
                     dbManager.insertUser(db, loggedInuser);
                     DBConnection.getInstance().closeDB(db);
 
+                    Intent intent = new Intent(MainActivity.this, HomeActivity.class);
+                    startActivity(intent);
+
                 } catch (ApplicationRuntimeException ex) {
                     ex.printStackTrace();
                     Message m=ex.getErrorMessage();
                     Log.i(TAG,m.getDescription() );
                 }
-
-
-                Intent intent = new Intent(MainActivity.this, HomeActivity.class);
-                startActivity(intent);
 
                 finish();
 

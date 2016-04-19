@@ -169,6 +169,7 @@ public class UserReminderActivity extends AppCompatActivity {
             }
         }
         friend.setId(userFriendList.getFriendId().get(i));
+        Log.i(TAG, "User id = " + friend.getId());
         userReminder.setFriend(friend);
 
         SQLiteDatabase db = DBConnection.getInstance().openWritableDB();

@@ -45,4 +45,10 @@ public class BluetoothAdvertiser {
 
     }
 
+    public void stopAdvertising() {
+        if (mBluetoothAdapter.isEnabled() == true) {
+            mBluetoothAdapter.disable();
+        }
+    }
+
 }

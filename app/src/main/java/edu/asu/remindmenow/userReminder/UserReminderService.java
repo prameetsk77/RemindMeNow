@@ -43,6 +43,8 @@ public class UserReminderService extends Service implements BluetoothReceiver.Bl
     public void onCreate() {
         super.onCreate();
         Log.i("Service", "On Service created");
+        UserSession.getInstance().setContext(this.getApplicationContext());
+        DBConnection.getInstance().setContext(this.getApplicationContext());
         startAdvertiseService();
         startDiscovery();
     }
@@ -52,6 +54,7 @@ public class UserReminderService extends Service implements BluetoothReceiver.Bl
         String userID = UserSession.getInstance().getLoggedInUser().getId();
         String advId = "RM_"+userID;
         mAdvertiser = new BluetoothAdvertiser(this);
+        mAdvertiser.startAdvertising(advId);
 
     }
 
@@ -73,13 +76,15 @@ public class UserReminderService extends Service implements BluetoothReceiver.Bl
 
     @Override
     public void didFoundDevice(String deviceName) {
-        String userId = "10209187059889895"; //deviceName.replaceAll("RM_", "");
-        Log.i(TAG, "Found user - " + userId);
+        String userId = deviceName.replaceAll("RM_", "");
+        if (userId == null || userId.length() == 0) return;
+        Log.i(TAG, "bluetooth Found user - " + userId);
 
 
         SQLiteDatabase db = DBConnection.getInstance().openWritableDB();
         DatabaseManager dbManager = new DatabaseManager();
         long remId = dbManager.isUserPresentInReminder(db,userId);
+
 
         try {
             // Get the reminder
@@ -89,7 +94,7 @@ public class UserReminderService extends Service implements BluetoothReceiver.Bl
                         DateUtilities.isFutureDate(reminder.getStartDate()) == false) {
 
                     Log.i(TAG, "Reminder dates are in range. Should show notification");
-                    //new NotificationService().notify(reminder.getReminderTitle()," ", this);
+                    new NotificationService().notify(reminder.getReminderTitle()," ", this);
 
                 }
             }

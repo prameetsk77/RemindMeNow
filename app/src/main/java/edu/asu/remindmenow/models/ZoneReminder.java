@@ -17,7 +17,7 @@ public class ZoneReminder extends Reminder{
     public LatLng getCoordinates(){return coordinates;}
 
     public void setCoordinates(LatLng coordinates){this.coordinates = coordinates;
-    String a = coordinates.toString();
+
 
     }
 

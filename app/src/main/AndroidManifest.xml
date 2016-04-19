@@ -37,6 +37,7 @@
 
         <service android:name=".GeofenceTransitionsIntentService"/>
 
+
         <!-- Receivers -->
         <receiver android:name="edu.asu.remindmenow.services.BootBroadcastReceiver">
             <intent-filter>

@@ -3,7 +3,9 @@ package edu.asu.remindmenow.activities;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.database.sqlite.SQLiteDatabase;
+import android.location.Location;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -25,6 +27,7 @@ import java.util.Calendar;
 
 import edu.asu.remindmenow.Geofence.GeofenceIntentService;
 import edu.asu.remindmenow.R;
+import edu.asu.remindmenow.models.UserReminder;
 import edu.asu.remindmenow.models.ZoneReminder;
 import edu.asu.remindmenow.util.DBConnection;
 import edu.asu.remindmenow.util.DatabaseManager;
@@ -44,7 +47,7 @@ public class GeofenceReminderActivity extends AppCompatActivity implements Googl
     String locationName;
     long endTimeMillis;
     LatLng coordinates;
-
+    Handler handler = new Handler();
     GeofenceIntentService geofenceService;
 
     GoogleApiClient mGoogleApiClient;
@@ -114,7 +117,7 @@ public class GeofenceReminderActivity extends AppCompatActivity implements Googl
                 myCalendar.set(Calendar.YEAR, year);
                 myCalendar.set(Calendar.MONTH, monthOfYear);
                 myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                textView.setText(monthOfYear + "/" + dayOfMonth + "/" + year);
+                textView.setText(monthOfYear+1 + "/" + dayOfMonth + "/" + year);
             }
 
         };
@@ -168,7 +171,7 @@ public class GeofenceReminderActivity extends AppCompatActivity implements Googl
                 myCalendar.set(Calendar.MONTH, monthOfYear);
                 myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
                 endTimeMillis = myCalendar.getTimeInMillis();
-                endTextView.setText(monthOfYear + "/" + dayOfMonth + "/" + year);
+                endTextView.setText(monthOfYear+1 + "/" + dayOfMonth + "/" + year);
             }
 
         };
@@ -186,9 +189,21 @@ public class GeofenceReminderActivity extends AppCompatActivity implements Googl
         });
 
         geofenceService = new GeofenceIntentService();
+//        startService()
     }
 
     public void saveGeofenceClicked(View v){
+
+        try {
+
+
+            Location lastLoc = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+            Log.i(TAG, "Current loc - " + lastLoc.getLatitude() + " Current loc " + lastLoc.getLongitude());
+        } catch (SecurityException e) {
+            Log.e("PERMISSION_EXCEPTION","PERMISSION_NOT_GRANTED");
+        }
+
+
         ZoneReminder geofenceReminder = new ZoneReminder();
         geofenceReminder.setCoordinates(coordinates);
         geofenceReminder.setReminderTitle(title.getText().toString());
@@ -224,5 +239,29 @@ public class GeofenceReminderActivity extends AppCompatActivity implements Googl
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
         Log.i(TAG, "Connection failed: ConnectionResult.getErrorCode() = " + connectionResult.getErrorCode());
+    }
+
+
+    public boolean validateInput(ZoneReminder zoneReminder) {
+
+        if (zoneReminder.getReminderTitle() == null ||
+                zoneReminder.getReminderTitle().equals("")) {
+            Toast.makeText(this, "Please enter the title of the reminder.", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        if (zoneReminder.getStartDate() == null ||
+                zoneReminder.getStartDate().equals("")) {
+            Toast.makeText(this, "Please enter the start date of the reminder", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        if (zoneReminder.getEndDate() == null ||
+                zoneReminder.getEndDate().equals("")) {
+            Toast.makeText(this, "Please enter the end date of the reminder..", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        return true;
     }
 }

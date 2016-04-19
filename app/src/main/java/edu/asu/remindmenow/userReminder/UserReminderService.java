@@ -33,6 +33,7 @@ public class UserReminderService extends Service implements BluetoothReceiver.Bl
     private BluetoothAdvertiser mAdvertiser;
     private BluetoothReceiver mReceiver;
     private static String TAG = "UserReminderService";
+    Handler handler = new Handler();
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -89,6 +90,8 @@ public class UserReminderService extends Service implements BluetoothReceiver.Bl
         try {
             // Get the reminder
             if (remId > 0) {
+
+                Log.i(TAG, "Found user with reminder " + userId);
                 UserReminder reminder = dbManager.getReminder(db, remId);
                 if (DateUtilities.isPastDate(reminder.getEndDate()) == false &&
                         DateUtilities.isFutureDate(reminder.getStartDate()) == false) {
@@ -108,6 +111,13 @@ public class UserReminderService extends Service implements BluetoothReceiver.Bl
 
     @Override
     public void didFinishDiscovery() {
-        startDiscovery();
+
+        handler.postDelayed(new Runnable(){
+            @Override
+            public void run(){
+                startDiscovery();
+            }
+        }, 3000);
+
     }
 }

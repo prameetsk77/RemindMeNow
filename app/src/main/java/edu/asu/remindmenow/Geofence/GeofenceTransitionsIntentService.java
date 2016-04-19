@@ -14,6 +14,7 @@ import java.util.List;
 import edu.asu.remindmenow.R;
 import edu.asu.remindmenow.Geofence.GeofenceErrorMessages;
 import edu.asu.remindmenow.activities.MainActivity;
+import edu.asu.remindmenow.services.NotificationService;
 
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -142,6 +143,8 @@ public class GeofenceTransitionsIntentService extends IntentService {
                 .setContentIntent(notificationPendingIntent);
 
         */
+
+        new NotificationService().notify("GEOFENCE", "In Zone: " + notificationDetails , this);
 
         // Dismiss notification once the user touches it.
         builder.setAutoCancel(true);

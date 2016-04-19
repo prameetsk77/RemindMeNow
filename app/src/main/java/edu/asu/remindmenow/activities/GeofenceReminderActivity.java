@@ -4,26 +4,44 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TimePicker;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
+import com.google.android.gms.location.places.ui.PlaceSelectionListener;
+import com.google.android.gms.maps.model.LatLng;
+
 import java.util.Calendar;
 
+import edu.asu.remindmenow.Geofence.GeofenceIntentService;
 import edu.asu.remindmenow.R;
 import edu.asu.remindmenow.models.ZoneReminder;
 
 /**
  * Created by priyama on 3/21/2016.
  */
-public class GeofenceReminderActivity extends AppCompatActivity {
+public class GeofenceReminderActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     EditText textView;
     EditText endTextView;
     EditText timeTextView;
     EditText endTimeTextView;
 
+    String TAG = "GeoFence";
+    long endTimeMillis;
+    LatLng coordinates;
+
+    GeofenceIntentService geofenceService;
+
+    GoogleApiClient mGoogleApiClient;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,6 +50,31 @@ public class GeofenceReminderActivity extends AppCompatActivity {
         final Calendar myCalendar = Calendar.getInstance();
         timeTextView = (EditText) findViewById(R.id.timeTextView);
 
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API)
+                .build();
+
+        mGoogleApiClient.connect();
+
+        PlaceAutocompleteFragment autocompleteFragment = (PlaceAutocompleteFragment)
+                getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
+        autocompleteFragment.setHint("Search a Location");
+        autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+        @Override
+        public void onPlaceSelected(Place place) {
+            // TODO: Get info about the selected place.
+            coordinates = place.getLatLng();
+            Log.i(TAG, "Place: " + place.getName());
+        }
+
+        @Override
+        public void onError(Status status) {
+            // TODO: Handle the error.
+            Log.i(TAG, "An error occurred: " + status);
+            }
+        });
 
         timeTextView.setOnClickListener(new View.OnClickListener() {
 
@@ -116,6 +159,7 @@ public class GeofenceReminderActivity extends AppCompatActivity {
                 myCalendar.set(Calendar.YEAR, year);
                 myCalendar.set(Calendar.MONTH, monthOfYear);
                 myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                endTimeMillis = myCalendar.getTimeInMillis();
                 endTextView.setText(monthOfYear + "/" + dayOfMonth + "/" + year);
             }
 
@@ -132,16 +176,34 @@ public class GeofenceReminderActivity extends AppCompatActivity {
                         myEndCalendar.get(Calendar.DAY_OF_MONTH)).show();
             }
         });
+
+        geofenceService = new GeofenceIntentService();
     }
 
     public void saveGeofenceClicked(View v){
-
-        ZoneReminder geofenceReminder=new ZoneReminder();
+        ZoneReminder geofenceReminder = new ZoneReminder();
+        geofenceReminder.setCoordinates(coordinates);
         geofenceReminder.setStartDate(textView.getText().toString());
         geofenceReminder.setEndDate(endTextView.getText().toString());
         geofenceReminder.setStartTime(timeTextView.getText().toString());
         geofenceReminder.setEndTime(endTimeTextView.getText().toString());
         System.out.println("geo " + geofenceReminder.getEndTime());
+        geofenceService.addGeofence(coordinates,endTimeMillis , mGoogleApiClient, this);
+    }
 
+    @Override
+    public void onConnected(Bundle bundle) {
+
+        Log.i(TAG, "Connected to GoogleApiClient");
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+        Log.i(TAG, "Connection suspended");
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+        Log.i(TAG, "Connection failed: ConnectionResult.getErrorCode() = " + connectionResult.getErrorCode());
     }
 }

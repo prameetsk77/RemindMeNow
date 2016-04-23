@@ -47,6 +47,8 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String RM_LOC_LAT = "loc_lat";
     public static final String RM_LOC_LONG = "loc_long";
     public static final String RM_LOC_ADDRESS = "loc_address";
+    public static final String RM_LOC_REQ_ID = "loc_req_id";
+
 
     public static final String RM_REMINDER_USER_ID = "reminder_user_id";
     public static final String RM_REMINDER_LOC_ID = "reminder_loc_id";
@@ -95,6 +97,7 @@ public class DBHelper extends SQLiteOpenHelper {
                             " (" + RM_LOC_ID + " integer primary key, " +
                             RM_LOC_LAT + " text," +
                             RM_LOC_LONG + " text," +
+                            RM_LOC_REQ_ID + " text," +
                             RM_LOC_ADDRESS + " text)"
             );
 

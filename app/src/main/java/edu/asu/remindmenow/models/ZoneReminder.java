@@ -1,15 +1,25 @@
 package edu.asu.remindmenow.models;
 
+import com.google.android.gms.maps.model.LatLng;
+
 /**
  * Created by Priyama Biswas on 3/26/16.
  */
 public class ZoneReminder extends Reminder{
-    String reminderTitle;
     String location;
     String startDate;
     String endDate;
     String startTime;
     String endTime;
+
+    LatLng coordinates;
+
+    public LatLng getCoordinates(){return coordinates;}
+
+    public void setCoordinates(LatLng coordinates){this.coordinates = coordinates;
+
+
+    }
 
     public String getLocation() {
         return location;
@@ -49,5 +59,10 @@ public class ZoneReminder extends Reminder{
 
     public void setEndTime(String endTime) {
         this.endTime = endTime;
+    }
+
+    @Override
+    public String toString() {
+        return getReminderTitle()+ getStartDate() + getEndDate() + getStartTime() + getEndTime() + getLocation() + getCoordinates().toString();
     }
 }

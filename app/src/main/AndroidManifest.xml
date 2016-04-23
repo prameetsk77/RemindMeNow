@@ -3,15 +3,16 @@
     package="edu.asu.remindmenow"
     android:installLocation="preferExternal">
 
-
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <uses-permission android:name="android.permission.INTERNET" />
 
-
     <uses-permission android:name="android.permission.BLUETOOTH" />
-    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
+
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+
 
     <application
         android:allowBackup="true"
@@ -27,8 +28,15 @@
         <meta-data android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id"/>
 
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyDOOLUo46iEIy_OAbHlfB-l0q_1pSBo7t8"/>
+
         <!-- Services -->
         <service android:name=".userReminder.UserReminderService" />
+
+        <service android:name=".GeofenceTransitionsIntentService"/>
+
 
         <!-- Receivers -->
         <receiver android:name="edu.asu.remindmenow.services.BootBroadcastReceiver">
@@ -66,7 +74,7 @@
 
         <activity
             android:name=".activities.ReminderListViewLoader"
-            android:label="@string/app_name">
+            android:label="@string/reminder_list">
         </activity>
 
         <activity

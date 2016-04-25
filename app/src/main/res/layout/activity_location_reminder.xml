@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#D1D7BF">
@@ -8,7 +9,7 @@
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/editText"
+        android:id="@+id/Title"
         android:hint="Title"
         android:textStyle="italic"
         android:textSize="45dp"
@@ -28,18 +29,32 @@
         android:paddingTop="25dp"
         android:paddingBottom="25dp">
 
-        <EditText
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/editText2"
-            android:textStyle="bold"
-            android:hint="Add Location"
-            android:layout_centerVertical="true"
-            android:layout_centerHorizontal="true"
-            android:textSize="30dp"
-            android:textColor="#ffffff"
-            android:textColorHint="#D1D7BF"
-            android:singleLine="true" />
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+
+            <fragment
+                android:id="@+id/place_autocomplete_fragment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:name="com.google.android.gms.location.places.ui.PlaceAutocompleteFragment"
+                tools:layout="@layout/abc_alert_dialog_button_bar_material" />
+            <!--
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/editText2"
+                android:textStyle="bold"
+                android:hint="Add Location"
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true"
+                android:textSize="30dp"
+                android:textColor="#ffffff"
+                android:textColorHint="#D1D7BF" />
+    -->
+        </LinearLayout>
 
         <EditText
             android:layout_width="wrap_content"
@@ -91,6 +106,7 @@
         android:layout_gravity="center_horizontal"
         android:src="#4a4646"
         android:layout_below="@+id/linearLayout"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:onClick="saveGeofenceClicked"/>
 
 </RelativeLayout>

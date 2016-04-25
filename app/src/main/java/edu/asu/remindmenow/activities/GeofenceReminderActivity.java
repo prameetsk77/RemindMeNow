@@ -27,7 +27,6 @@ import java.util.Calendar;
 
 import edu.asu.remindmenow.Geofence.GeofenceIntentService;
 import edu.asu.remindmenow.R;
-import edu.asu.remindmenow.models.UserReminder;
 import edu.asu.remindmenow.models.ZoneReminder;
 import edu.asu.remindmenow.util.DBConnection;
 import edu.asu.remindmenow.util.DatabaseManager;
@@ -43,7 +42,7 @@ public class GeofenceReminderActivity extends AppCompatActivity implements Googl
     EditText endTimeTextView;
     EditText title;
 
-    String TAG = "GeoFence";
+    String TAG = "Zone Reminder";
     String locationName;
     long endTimeMillis;
     LatLng coordinates;
@@ -55,6 +54,7 @@ public class GeofenceReminderActivity extends AppCompatActivity implements Googl
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_geofence_reminder);
+
         textView = (EditText) findViewById(R.id.dateTextView);
         final Calendar myCalendar = Calendar.getInstance();
         timeTextView = (EditText) findViewById(R.id.timeTextView);
@@ -195,8 +195,6 @@ public class GeofenceReminderActivity extends AppCompatActivity implements Googl
     public void saveGeofenceClicked(View v){
 
         try {
-
-
             Location lastLoc = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
             Log.i(TAG, "Current loc - " + lastLoc.getLatitude() + " Current loc " + lastLoc.getLongitude());
         } catch (SecurityException e) {
@@ -212,6 +210,8 @@ public class GeofenceReminderActivity extends AppCompatActivity implements Googl
         geofenceReminder.setEndDate(endTextView.getText().toString());
         geofenceReminder.setStartTime(timeTextView.getText().toString());
         geofenceReminder.setEndTime(endTimeTextView.getText().toString());
+        geofenceReminder.setReqID(geofenceReminder.toString());
+
         System.out.println("geo " + geofenceReminder.getEndTime());
         geofenceService.addGeofence(geofenceReminder,endTimeMillis , mGoogleApiClient, this);
 

@@ -11,14 +11,13 @@ public class ZoneReminder extends Reminder{
     String endDate;
     String startTime;
     String endTime;
+    String ReqID;
 
     LatLng coordinates;
 
     public LatLng getCoordinates(){return coordinates;}
 
     public void setCoordinates(LatLng coordinates){this.coordinates = coordinates;
-
-
     }
 
     public String getLocation() {
@@ -61,8 +60,12 @@ public class ZoneReminder extends Reminder{
         this.endTime = endTime;
     }
 
+    public void setReqID(String ReqID){
+        this.ReqID = ReqID;    }
+
+    public String getReqID(){return ReqID;}
     @Override
     public String toString() {
-        return getReminderTitle()+ getStartDate() + getEndDate() + getStartTime() + getEndTime() + getLocation() + getCoordinates().toString();
+        return (getReminderTitle()+ getStartDate() + getEndDate() + getStartTime() + getEndTime() + getLocation() + getCoordinates()).toString();
     }
 }

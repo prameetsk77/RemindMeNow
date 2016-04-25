@@ -94,6 +94,8 @@ public class LocationReminderActivity extends AppCompatActivity implements Googl
                 myCalendar.set(Calendar.YEAR, year);
                 myCalendar.set(Calendar.MONTH, monthOfYear);
                 myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+
+                endTimeMillis = myCalendar.getTimeInMillis();
                 endTextView.setText(monthOfYear+1+"/"+dayOfMonth+"/"+year);
             }
 
@@ -108,6 +110,7 @@ public class LocationReminderActivity extends AppCompatActivity implements Googl
                 new DatePickerDialog(LocationReminderActivity.this, endDate, myEndCalendar
                         .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
                         myEndCalendar.get(Calendar.DAY_OF_MONTH)).show();
+
             }
         });
 
@@ -140,6 +143,7 @@ public class LocationReminderActivity extends AppCompatActivity implements Googl
             }
         });
 
+        locationService = new Location_GeofenceIntentService();
     }
 
     public boolean validateInput(LocationReminder locationReminder) {

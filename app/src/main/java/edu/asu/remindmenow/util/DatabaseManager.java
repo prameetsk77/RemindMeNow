@@ -157,6 +157,29 @@ public class DatabaseManager {
 
     }
 
+    public void deleteUserReminder(SQLiteDatabase db, long reminderId) {
+        UserReminder userReminder = getReminder(db, reminderId);
+
+        // TODO: delete from time table
+        // Delete the entry from time table
+        // deleteTime(db,0);
+
+        // Remove from user - reminder ref table
+        deleteRem_User_Ref(db, reminderId);
+
+        String table = DBHelper.RM_REMINDER_TABLE_NAME;
+        String whereClause = "_id" + "=?";
+        String[] whereArgs = new String[] { String.valueOf(reminderId) };
+        db.delete(table, whereClause, whereArgs);
+
+    }
+
+    public void deleteRem_User_Ref(SQLiteDatabase db, long reminderId) {
+        String table = DBHelper.RM_REMINDER_USER_REF_TABLE_NAME;
+        String whereClause = DBHelper.RM_REMINDER_ID + "=?";
+        String[] whereArgs = new String[] { String.valueOf(reminderId) };
+        db.delete(table, whereClause, whereArgs);
+    }
 
     //==============================================================================================
     // Reminder Zone
@@ -203,11 +226,12 @@ public class DatabaseManager {
             contentValues.put(DBHelper.RM_REMINDER_CREATED_BY, UserSession.getInstance().getLoggedInUser().getId());
             long reminderId = db.insertOrThrow(DBHelper.RM_REMINDER_TABLE_NAME, null, contentValues);
 
-            // Creare reminder-user ref entry
+            // Create reminder-user ref entry
             contentValues = new ContentValues();
             contentValues.put(DBHelper.RM_LOC_LAT,reminder.getCoordinates().latitude);
             contentValues.put(DBHelper.RM_LOC_LONG,reminder.getCoordinates().longitude);
             contentValues.put(DBHelper.RM_LOC_ADDRESS,reminder.getLocation());
+            contentValues.put(DBHelper.RM_LOC_REQ_ID,"");
             long locId = db.insertOrThrow(DBHelper.RM_LOCATION_TABLE_NAME, null, contentValues);
 
             contentValues = new ContentValues();
@@ -279,6 +303,7 @@ public class DatabaseManager {
                 if (cursor.moveToFirst()) {
                     double latitude = (cursor.getDouble(cursor.getColumnIndex(DBHelper.RM_LOC_LAT)));
                     double longitude = (cursor.getDouble(cursor.getColumnIndex(DBHelper.RM_LOC_LONG)));
+                    String reqId = (cursor.getString(cursor.getColumnIndex(DBHelper.RM_LOC_REQ_ID)));
                     LatLng coordinates = new LatLng(latitude,longitude);
                     reminder.setCoordinates(coordinates);
                     reminder.setLocation((cursor.getString(cursor.getColumnIndex(DBHelper.RM_LOC_ADDRESS))));
@@ -477,6 +502,13 @@ public class DatabaseManager {
             message.setDescription(ex.getMessage());
             throw new ApplicationRuntimeException(message);
         }
+    }
+
+    public void deleteTime (SQLiteDatabase db, long timeId) {
+        String table = DBHelper.RM_TIME_TABLE_NAME;
+        String whereClause = "_id" + "=?";
+        String[] whereArgs = new String[] { String.valueOf(timeId) };
+        db.delete(table, whereClause, whereArgs);
     }
 
     //==============================================================================================

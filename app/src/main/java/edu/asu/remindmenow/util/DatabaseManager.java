@@ -324,6 +324,137 @@ public class DatabaseManager {
     // Reminder Loc
     //==============================================================================================
 
+    public List<LocationReminder> getAllLocationReminders(SQLiteDatabase db) {
+
+        ArrayList<LocationReminder> locationReminderList = new ArrayList<LocationReminder>();
+
+        Cursor cursor =  db.rawQuery( "select * from " + DBHelper.RM_REMINDER_TABLE_NAME +
+                " WHERE " + DBHelper.RM_REMINDER_TYPE +" = \"Z\"", null );
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()) {
+            Log.i(TAG, "Reminder - " + cursor.getString(cursor.getColumnIndex(DBHelper.RM_REMINDER_CREATED_DATE)));
+            long reminderID = cursor.getLong(cursor.getColumnIndex(DBHelper.RM_REMINDER_ID));
+            LocationReminder reminder = getLocationReminderFromRemID(db, reminderID);
+
+            if(reminder == null)
+                Log.e(TAG, "reminder == nul in getAllZoneReminders");
+            else
+                locationReminderList.add(reminder);
+            cursor.moveToNext();
+        }
+
+        return locationReminderList;
+    }
+
+    public long insertLocationReminder(SQLiteDatabase db, LocationReminder reminder) {
+
+        try {
+            ContentValues contentValues = new ContentValues();
+
+            // Create time entry
+            long timeId = insertTime(db,reminder.getStartDate(), reminder.getEndDate(),
+                    null, null);
+
+            // Create reminder entry
+            contentValues = new ContentValues();
+            contentValues.put(DBHelper.RM_REMINDER_TYPE,"L");
+            contentValues.put(DBHelper.RM_REMINDER_TIME_ID,timeId);
+            contentValues.put(DBHelper.RM_REMINDER_TITLE,reminder.getReminderTitle());
+            contentValues.put(DBHelper.RM_REMINDER_CREATED_DATE,System.currentTimeMillis());
+            contentValues.put(DBHelper.RM_REMINDER_CREATED_BY, UserSession.getInstance().getLoggedInUser().getId());
+            long reminderId = db.insertOrThrow(DBHelper.RM_REMINDER_TABLE_NAME, null, contentValues);
+
+            // Creare reminder-user ref entry
+            contentValues = new ContentValues();
+            contentValues.put(DBHelper.RM_LOC_LAT,reminder.getCoordinates().latitude);
+            contentValues.put(DBHelper.RM_LOC_LONG,reminder.getCoordinates().longitude);
+            contentValues.put(DBHelper.RM_LOC_ADDRESS,reminder.getLocation());
+            long locId = db.insertOrThrow(DBHelper.RM_LOCATION_TABLE_NAME, null, contentValues);
+
+            contentValues = new ContentValues();
+            contentValues.put(DBHelper.RM_REMINDER_ID,reminderId);
+            contentValues.put(DBHelper.RM_LOC_ID,locId);
+            db.insertOrThrow(DBHelper.RM_REMINDER_LOC_REF_TABLE_NAME, null, contentValues);
+
+            db.close();
+            return reminderId;
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            String errorCode = ApplicationConstants.SYSTEM_FAILURE;
+            Message message = new Message();
+            message.setCode(errorCode);
+            message.setDescription(ex.getMessage());
+            throw new ApplicationRuntimeException(message);
+        }
+
+    }
+
+
+    public LocationReminder getLocationReminderFromRemID(SQLiteDatabase db, long reminderId) {
+
+        try {
+
+            Cursor cursor =  db.rawQuery( "select * from " + DBHelper.RM_REMINDER_TABLE_NAME+
+                    " WHERE " + DBHelper.RM_REMINDER_ID +" = \""+reminderId+"\"", null );
+
+            if (cursor.moveToFirst()) {
+
+                LocationReminder reminder = new LocationReminder();
+                reminder.setReminderTitle(cursor.getString(cursor.getColumnIndex(DBHelper.RM_REMINDER_TITLE)));
+
+                long timeId = cursor.getLong(cursor.getColumnIndex(DBHelper.RM_REMINDER_TIME_ID));
+                Time time = getTime(db, timeId);
+                reminder.setStartDate(time.getStartDate());
+                reminder.setEndDate(time.getEndDate());
+                reminder.setReminderTitle(cursor.getString(cursor.getColumnIndex(DBHelper.RM_REMINDER_TITLE)));
+                setLocationReminderAddress(db, reminderId, reminder);
+                return reminder;
+            }
+            return null;
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            String errorCode = ApplicationConstants.SYSTEM_FAILURE;
+            Message message = new Message();
+            message.setCode(errorCode);
+            message.setDescription(ex.getMessage());
+            throw new ApplicationRuntimeException(message);
+        }
+
+    }
+
+    private void setLocationReminderAddress(SQLiteDatabase db, long reminderId, LocationReminder reminder){
+        try {
+
+            Cursor cursor =  db.rawQuery( "select * from " + DBHelper.RM_REMINDER_LOC_REF_TABLE_NAME+
+                    " WHERE " + DBHelper.RM_REMINDER_ID +" = \""+reminderId+"\"", null );
+
+            if (cursor.moveToFirst()) {
+                long loc_id = (cursor.getLong(cursor.getColumnIndex(DBHelper.RM_LOC_ID)));
+
+                cursor =  db.rawQuery( "select * from " + DBHelper.RM_LOCATION_TABLE_NAME +
+                        " WHERE " + DBHelper.RM_LOC_ID +" = \""+loc_id+"\"", null );
+                if (cursor.moveToFirst()) {
+                    double latitude = (cursor.getDouble(cursor.getColumnIndex(DBHelper.RM_LOC_LAT)));
+                    double longitude = (cursor.getDouble(cursor.getColumnIndex(DBHelper.RM_LOC_LONG)));
+                    LatLng coordinates = new LatLng(latitude,longitude);
+                    reminder.setCoordinates(coordinates);
+                    reminder.setLocation((cursor.getString(cursor.getColumnIndex(DBHelper.RM_LOC_ADDRESS))));
+                }
+            }
+            return;
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            String errorCode = ApplicationConstants.SYSTEM_FAILURE;
+            Message message = new Message();
+            message.setCode(errorCode);
+            message.setDescription(ex.getMessage());
+            throw new ApplicationRuntimeException(message);
+        }
+    }
+
     //==============================================================================================
     // Time
     //==============================================================================================

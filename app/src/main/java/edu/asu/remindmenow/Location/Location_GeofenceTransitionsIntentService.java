@@ -5,20 +5,29 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.text.TextUtils;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingEvent;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import edu.asu.remindmenow.R;
 import edu.asu.remindmenow.activities.MainActivity;
+import edu.asu.remindmenow.models.LocationReminder;
 import edu.asu.remindmenow.services.NotificationService;
+import edu.asu.remindmenow.util.DBConnection;
+import edu.asu.remindmenow.util.DatabaseManager;
 
 
 /**
@@ -28,7 +37,7 @@ public class Location_GeofenceTransitionsIntentService extends IntentService {
 
     ///////////
 
-    String TAG = "GeoFence Transition Service";
+    String TAG = "Location Geofence Transition Service";
 
     /**
      * Creates an IntentService.  Invoked by your subclass's constructor.
@@ -58,15 +67,44 @@ public class Location_GeofenceTransitionsIntentService extends IntentService {
             return;
         }
 
+        LocationReminder locationReminder = new LocationReminder();
+
+        List<Geofence> geofenceList = geofencingEvent.getTriggeringGeofences();
+        String ID = geofenceList.get(0).getRequestId();
+        //find from database function and delete
+
+        SQLiteDatabase db = DBConnection.getInstance().openWritableDB();
+        DatabaseManager dbManager = new DatabaseManager();
+        locationReminder = dbManager.getLocationReminderFromReqID(db, ID);
+        DBConnection.getInstance().closeDB(db);
+
         // Get the transition type.
         int geofenceTransition = geofencingEvent.getGeofenceTransition();
 
+        Date startDate = null;
+        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+        try {
+            startDate = sdf.parse(locationReminder.getStartDate());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        long startDatemillis = startDate.getTime();
+
+        Date endDate = null;
+        try {
+            endDate = sdf.parse(locationReminder.getStartDate());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        long endDatemillis = endDate.getTime();
+
         // Test that the reported transition was of interest.
-        if ( geofenceTransition == Geofence.GEOFENCE_TRANSITION_ENTER) {
+        if ( geofenceTransition == Geofence.GEOFENCE_TRANSITION_ENTER  && System.currentTimeMillis() > startDatemillis && System.currentTimeMillis() < endDatemillis) {
 
             // Get the geofences that were triggered. A single event can trigger
             // multiple geofences.
             List triggeringGeofences = geofencingEvent.getTriggeringGeofences();
+
 
             // Get the transition details as a String.
             String geofenceTransitionDetails = getGeofenceTransitionDetails(
@@ -74,31 +112,20 @@ public class Location_GeofenceTransitionsIntentService extends IntentService {
                     geofenceTransition,
                     triggeringGeofences
             );
-
+            new NotificationService().notify("Location Reminder",  locationReminder.getReminderTitle() , this);
             // Send notification and log the transition details.
             //sendNotification(geofenceTransitionDetails);
 
-            List<Geofence> geofenceList = geofencingEvent.getTriggeringGeofences();
-            /*
-            for(int i=0;i<geofenceList.size();i++) {
-                String ID = geofenceList.get(i).getRequestId();
-                //find from database function and delete
-                if (deletefromdatabase()) {
-
-                    //remove from google API
-                }
-
-            }
-            */
-            for(int i=0;i<geofenceList.size();i++) {
-                String ID = geofenceList.get(i).getRequestId();
-                //find from database function and delete
-                new NotificationService().notify("Location Reminder",  ID , this);
-
-            }
-
             Log.i(TAG, geofenceTransitionDetails);
-        } else {
+        } else if ( System.currentTimeMillis() < startDatemillis) {
+            Toast.makeText(this, TAG + " Transition before Start Date", Toast.LENGTH_SHORT).show();
+            //delete from dB
+        }
+        else if (System.currentTimeMillis() > endDatemillis) {
+            Toast.makeText(this, TAG + " Transition after end Date", Toast.LENGTH_SHORT).show();
+            //delete from dB
+        }
+        else {
             // Log the error.
             Log.e(TAG, "Invalid Transition");
         }

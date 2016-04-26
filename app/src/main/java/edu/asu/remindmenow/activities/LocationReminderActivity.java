@@ -23,7 +23,7 @@ import com.google.android.gms.maps.model.LatLng;
 
 import java.util.Calendar;
 
-import edu.asu.remindmenow.location.Location_GeofenceIntentService;
+import edu.asu.remindmenow.location.*;
 import edu.asu.remindmenow.R;
 import edu.asu.remindmenow.models.LocationReminder;
 import edu.asu.remindmenow.util.DBConnection;

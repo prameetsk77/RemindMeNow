@@ -48,8 +48,8 @@ public class UserReminderService extends Service implements BluetoothReceiver.Bl
         Log.i("Service", "On Service created");
         UserSession.getInstance().setContext(this.getApplicationContext());
         DBConnection.getInstance().setContext(this.getApplicationContext());
-        startAdvertiseService();
-        startDiscovery();
+//        startAdvertiseService();
+//        startDiscovery();
     }
 
     private void startAdvertiseService() {

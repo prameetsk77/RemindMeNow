@@ -11,6 +11,7 @@ import com.google.android.gms.maps.model.LatLng;
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.asu.remindmenow.R;
 import edu.asu.remindmenow.exception.ApplicationRuntimeException;
 import edu.asu.remindmenow.models.LocationReminder;
 import edu.asu.remindmenow.models.Message;
@@ -40,6 +41,7 @@ public class DatabaseManager {
         while (!cursor.isAfterLast()) {
             Reminder reminder=new Reminder();
             reminder.setReminderTitle(cursor.getString(cursor.getColumnIndex(DBHelper.RM_REMINDER_TITLE)));
+            reminder.setId(cursor.getLong(cursor.getColumnIndex(DBHelper.RM_REMINDER_ID)));
 //            String reminderType = cursor.getString(cursor.getColumnIndex(DBHelper.RM_REMINDER_TYPE));
 //            if (reminderType.equals("U")) {
 //
@@ -69,9 +71,9 @@ public class DatabaseManager {
 
     public void deleteReminder(SQLiteDatabase db, long reminderId) {
 
-
         try {
 
+            Log.i(TAG, "Reminder id - " + reminderId);
             Cursor cursor =  db.rawQuery( "select * from " + DBHelper.RM_REMINDER_TABLE_NAME+
                     " WHERE " + DBHelper.RM_REMINDER_ID +" = \""+reminderId+"\"", null );
 
@@ -80,12 +82,27 @@ public class DatabaseManager {
                 long timeId = cursor.getLong(cursor.getColumnIndex(DBHelper.RM_REMINDER_TIME_ID));
                 deleteTime(db,timeId);
 
-                //switch
-                // Remove from user - reminder ref table
-                deleteRem_User_Ref(db, reminderId);
+                Log.i(TAG, "Time id - " + timeId);
+
+                String reminderType = cursor.getString(cursor.getColumnIndex(DBHelper.RM_REMINDER_TYPE));
+
+                switch (reminderType){
+                    case "U":
+
+                        deleteRem_User_Ref(db, reminderId);
+                        break;
+                    case "L":
+                        deleteRem_Loc_Ref(db, reminderId);
+                        break;
+                    case "Z":
+                        deleteRem_Loc_Ref(db, reminderId);
+                        break;
+
+                }
+
 
                 String table = DBHelper.RM_REMINDER_TABLE_NAME;
-                String whereClause = "_id" + "=?";
+                String whereClause = DBHelper.RM_REMINDER_ID + "=?";
                 String[] whereArgs = new String[] { String.valueOf(reminderId) };
                 db.delete(table, whereClause, whereArgs);
 
@@ -558,6 +575,13 @@ public class DatabaseManager {
             message.setDescription(ex.getMessage());
             throw new ApplicationRuntimeException(message);
         }
+    }
+
+    public void deleteRem_Loc_Ref(SQLiteDatabase db, long reminderId) {
+        String table = DBHelper.RM_REMINDER_LOC_REF_TABLE_NAME;
+        String whereClause = DBHelper.RM_REMINDER_ID + "=?";
+        String[] whereArgs = new String[] { String.valueOf(reminderId) };
+        db.delete(table, whereClause, whereArgs);
     }
 
     //==============================================================================================

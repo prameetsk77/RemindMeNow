@@ -115,33 +115,11 @@ public class GeofenceTransitionsIntentService extends IntentService {
                     geofenceTransition,
                     triggeringGeofences
             );
-            new NotificationService().notify("Zone Reminder",  zoneReminder.getReminderTitle() , this);
+            new NotificationService().notify("Z","Zone Reminder",  zoneReminder.getReminderTitle() , this);
             // Send notification and log the transition details.
             //sendNotification(geofenceTransitionDetails);
 
-<<<<<<< HEAD
-=======
-            List<Geofence> geofenceList = geofencingEvent.getTriggeringGeofences();
-            /*
-            for(int i=0;i<geofenceList.size();i++) {
-                String ID = geofenceList.get(i).getRequestId();
-                //find from database function and delete
-                if (deletefromdatabase()) {
 
-                    //remove from google API
-                }
-
-            }
-            */
-
-            for(int i=0;i<geofenceList.size();i++) {
-                String ID = geofenceList.get(i).getRequestId();
-                //find from database function and delete
-                new NotificationService().notify("Z","Zone Reminder",  ID , this);
-
-            }
-
->>>>>>> upstream/master
             Log.i(TAG, geofenceTransitionDetails);
         }
         else if ( System.currentTimeMillis() < startDatemillis) {

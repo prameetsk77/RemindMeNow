@@ -61,7 +61,7 @@ public class BluetoothReceiver {
                 BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
                 String derp = device.getName();
                 if (derp != null) {
-                    Log.i(TAG, "Device " +  derp + " " + this);
+                 //   Log.i(TAG, "Device " +  derp + " " + this);
                     if (derp.startsWith("RM_")) {
                         Log.v("Bluetooth", "Entered the Found " + derp);
                         mInterface.didFoundDevice(derp);

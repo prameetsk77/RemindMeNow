@@ -19,7 +19,7 @@ import edu.asu.remindmenow.userReminder.UserReminderService;
 import edu.asu.remindmenow.util.DBConnection;
 import edu.asu.remindmenow.util.DatabaseManager;
 
-public class HomeActivity extends AppCompatActivity {
+public class HomeActivity extends BaseActivity {
 
     private static String TAG = "HomeActivity";
 

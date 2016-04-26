@@ -25,7 +25,7 @@ import edu.asu.remindmenow.util.DatabaseManager;
 /**
  * Created by priyama on 4/6/2016.
  */
-public class ReminderListViewLoader extends AppCompatActivity {
+public class ReminderListViewLoader extends BaseActivity {
 
     private  ListView mListView;
 

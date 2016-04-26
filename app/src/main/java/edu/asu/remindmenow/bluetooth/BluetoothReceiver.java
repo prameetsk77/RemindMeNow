@@ -33,7 +33,7 @@ public class BluetoothReceiver {
     public void startDiscovery () {
 
         if (!isDiscovering()) {
-            Log.i(TAG, "Strarting discovery " +  this);
+            Log.i(TAG, "Starting discovery " +  this);
             mBluetoothAdapter.startDiscovery();
         }
 

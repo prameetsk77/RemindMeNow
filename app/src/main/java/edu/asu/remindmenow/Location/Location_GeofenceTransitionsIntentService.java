@@ -62,7 +62,7 @@ public class Location_GeofenceTransitionsIntentService extends IntentService {
         if (geofencingEvent.hasError()) {
             String errorMessage = Location_GeofenceErrorMessages.getErrorString(this,
                     geofencingEvent.getErrorCode());
-            new NotificationService().notify("GEOFENCE", "ERROR " + errorMessage , this);
+            new NotificationService().notify("L","GEOFENCE", "ERROR " + errorMessage , this);
             Log.e(TAG, errorMessage);
             return;
         }
@@ -112,7 +112,7 @@ public class Location_GeofenceTransitionsIntentService extends IntentService {
                     geofenceTransition,
                     triggeringGeofences
             );
-            new NotificationService().notify("Location Reminder",  locationReminder.getReminderTitle() , this);
+            new NotificationService().notify("L", "Location Reminder",  locationReminder.getReminderTitle() , this);
             // Send notification and log the transition details.
             //sendNotification(geofenceTransitionDetails);
 
@@ -188,7 +188,7 @@ public class Location_GeofenceTransitionsIntentService extends IntentService {
 
         */
 
-        new NotificationService().notify("GEOFENCE", "In Zone: " + notificationDetails , this);
+        new NotificationService().notify("L", "GEOFENCE", "In Zone: " + notificationDetails , this);
 
         // Dismiss notification once the user touches it.
         builder.setAutoCancel(true);

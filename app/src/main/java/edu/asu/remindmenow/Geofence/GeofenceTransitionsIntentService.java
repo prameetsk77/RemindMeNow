@@ -66,7 +66,7 @@ public class GeofenceTransitionsIntentService extends IntentService {
         if (geofencingEvent.hasError()) {
             String errorMessage = GeofenceErrorMessages.getErrorString(this,
                     geofencingEvent.getErrorCode());
-            new NotificationService().notify("GEOFENCE", "ERROR " + errorMessage , this);
+            new NotificationService().notify("Z","GEOFENCE", "ERROR " + errorMessage , this);
             Log.e(TAG, errorMessage);
             return;
         }
@@ -119,6 +119,29 @@ public class GeofenceTransitionsIntentService extends IntentService {
             // Send notification and log the transition details.
             //sendNotification(geofenceTransitionDetails);
 
+<<<<<<< HEAD
+=======
+            List<Geofence> geofenceList = geofencingEvent.getTriggeringGeofences();
+            /*
+            for(int i=0;i<geofenceList.size();i++) {
+                String ID = geofenceList.get(i).getRequestId();
+                //find from database function and delete
+                if (deletefromdatabase()) {
+
+                    //remove from google API
+                }
+
+            }
+            */
+
+            for(int i=0;i<geofenceList.size();i++) {
+                String ID = geofenceList.get(i).getRequestId();
+                //find from database function and delete
+                new NotificationService().notify("Z","Zone Reminder",  ID , this);
+
+            }
+
+>>>>>>> upstream/master
             Log.i(TAG, geofenceTransitionDetails);
         }
         else if ( System.currentTimeMillis() < startDatemillis) {
@@ -192,7 +215,7 @@ public class GeofenceTransitionsIntentService extends IntentService {
 
         */
 
-        new NotificationService().notify("GEOFENCE", "In Zone: " + notificationDetails , this);
+        new NotificationService().notify("Z","GEOFENCE", "In Zone: " + notificationDetails , this);
 
         // Dismiss notification once the user touches it.
         builder.setAutoCancel(true);

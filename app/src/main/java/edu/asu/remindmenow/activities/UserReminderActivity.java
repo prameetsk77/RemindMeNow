@@ -28,11 +28,12 @@ import edu.asu.remindmenow.R;
 import edu.asu.remindmenow.models.User;
 import edu.asu.remindmenow.models.UserFriendList;
 import edu.asu.remindmenow.models.UserReminder;
+import edu.asu.remindmenow.util.ApplicationConstants;
 import edu.asu.remindmenow.util.DBConnection;
 import edu.asu.remindmenow.util.DatabaseManager;
 import edu.asu.remindmenow.util.DateUtilities;
 
-public class UserReminderActivity extends AppCompatActivity {
+public class UserReminderActivity extends BaseActivity {
 
 
     EditText titleTextView;
@@ -198,37 +199,37 @@ public class UserReminderActivity extends AppCompatActivity {
 
         if (userReminder.getReminderTitle() == null ||
                 userReminder.getReminderTitle().equals("")) {
-            Toast.makeText(UserReminderActivity.this, "Please enter the title of the reminder.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(UserReminderActivity.this, ApplicationConstants.NO_TITLE, Toast.LENGTH_SHORT).show();
             return false;
         }
 
         if (userReminder.getStartDate() == null ||
                 userReminder.getStartDate().equals("")) {
-            Toast.makeText(UserReminderActivity.this, "Please enter the start date of the reminder", Toast.LENGTH_SHORT).show();
+            Toast.makeText(UserReminderActivity.this,ApplicationConstants.NO_START_DATE, Toast.LENGTH_SHORT).show();
             return false;
         }
 
         if (userReminder.getEndDate() == null ||
                 userReminder.getEndDate().equals("")) {
-            Toast.makeText(UserReminderActivity.this, "Please enter the end date of the reminder..", Toast.LENGTH_SHORT).show();
+            Toast.makeText(UserReminderActivity.this, ApplicationConstants.NO_END_DATE, Toast.LENGTH_SHORT).show();
             return false;
         }
 
         if (userReminder.getFriend() == null ||
                 userReminder.getFriend().getName().equals("")) {
-            Toast.makeText(UserReminderActivity.this, "Please enter the user to be reminder of.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(UserReminderActivity.this, ApplicationConstants.NO_FRIEND, Toast.LENGTH_SHORT).show();
             return false;
         }
 
         // Date range validation
         try {
             if (DateUtilities.isPastDate(userReminder.getEndDate()) == true) {
-                Toast.makeText(UserReminderActivity.this, "Please enter a future date as end date.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(UserReminderActivity.this, ApplicationConstants.FUTURE_DATE, Toast.LENGTH_SHORT).show();
                 return false;
             }
 
             if (DateUtilities.isDateInOrder(userReminder.getStartDate(), userReminder.getEndDate()) == false) {
-                Toast.makeText(UserReminderActivity.this, "Please enter a valid date range.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(UserReminderActivity.this, ApplicationConstants.VALID_DATE, Toast.LENGTH_SHORT).show();
                 return false;
             }
         } catch (ParseException ex) {

@@ -17,10 +17,22 @@ import edu.asu.remindmenow.activities.MainActivity;
  */
 public class NotificationService {
 
-    public void notify(String notificationTitle, String notificationMessage, Context ctx){
+    public void notify(String reminderType, String notificationTitle, String notificationMessage, Context ctx){
+        int imageName=0;
+        switch (reminderType){
+            case "U": imageName=R.drawable.user_icon_1;
+                        break;
+            case "L": imageName=R.drawable.map_icon_1;
+                       break;
+            case "Z": imageName=R.drawable.home_icon_1;
+                      break;
+
+        }
+
+
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(ctx)
-                        .setSmallIcon(R.drawable.home_icon_1)
+                        .setSmallIcon(imageName)
                         .setContentTitle(notificationTitle)
                         .setContentText(notificationMessage)
                         .setVibrate(new long[] { 1000, 1000, 1000, 1000, 1000 });;

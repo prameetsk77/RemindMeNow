@@ -55,7 +55,7 @@ public class GeofenceTransitionsIntentService extends IntentService {
         if (geofencingEvent.hasError()) {
             String errorMessage = GeofenceErrorMessages.getErrorString(this,
                     geofencingEvent.getErrorCode());
-            new NotificationService().notify("GEOFENCE", "ERROR " + errorMessage , this);
+            new NotificationService().notify("Z","GEOFENCE", "ERROR " + errorMessage , this);
             Log.e(TAG, errorMessage);
             return;
         }
@@ -96,7 +96,7 @@ public class GeofenceTransitionsIntentService extends IntentService {
             for(int i=0;i<geofenceList.size();i++) {
                 String ID = geofenceList.get(i).getRequestId();
                 //find from database function and delete
-                new NotificationService().notify("Zone Reminder",  ID , this);
+                new NotificationService().notify("Z","Zone Reminder",  ID , this);
 
             }
 
@@ -164,7 +164,7 @@ public class GeofenceTransitionsIntentService extends IntentService {
 
         */
 
-        new NotificationService().notify("GEOFENCE", "In Zone: " + notificationDetails , this);
+        new NotificationService().notify("Z","GEOFENCE", "In Zone: " + notificationDetails , this);
 
         // Dismiss notification once the user touches it.
         builder.setAutoCancel(true);

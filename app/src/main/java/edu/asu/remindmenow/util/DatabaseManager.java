@@ -40,10 +40,8 @@ public class DatabaseManager {
         while (!cursor.isAfterLast()) {
             Reminder reminder=new Reminder();
             reminder.setReminderTitle(cursor.getString(cursor.getColumnIndex(DBHelper.RM_REMINDER_TITLE)));
-//            String reminderType = cursor.getString(cursor.getColumnIndex(DBHelper.RM_REMINDER_TYPE));
-//            if (reminderType.equals("U")) {
-//
-//            }
+            reminder.setReminderType(cursor.getString(cursor.getColumnIndex(DBHelper.RM_REMINDER_TYPE)));
+
             reminderList.add(reminder);
             cursor.moveToNext();
         }

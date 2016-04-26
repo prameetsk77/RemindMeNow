@@ -9,6 +9,7 @@ public class Reminder {
     String reminderTitle;
     String createdDate;
     String createdBy;
+    String reminderType;
 
     public String getReminderTitle() {
         return reminderTitle;
@@ -40,5 +41,13 @@ public class Reminder {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public String getReminderType() {
+        return reminderType;
+    }
+
+    public void setReminderType(String reminderType) {
+        this.reminderType = reminderType;
     }
 }

@@ -21,13 +21,16 @@ import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
 import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 import com.google.android.gms.maps.model.LatLng;
 
+import java.text.ParseException;
 import java.util.Calendar;
 
 import edu.asu.remindmenow.location.Location_GeofenceIntentService;
 import edu.asu.remindmenow.R;
 import edu.asu.remindmenow.models.LocationReminder;
+import edu.asu.remindmenow.util.ApplicationConstants;
 import edu.asu.remindmenow.util.DBConnection;
 import edu.asu.remindmenow.util.DatabaseManager;
+import edu.asu.remindmenow.util.DateUtilities;
 
 public class LocationReminderActivity extends BaseActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
@@ -146,28 +149,28 @@ public class LocationReminderActivity extends BaseActivity implements GoogleApiC
         locationService = new Location_GeofenceIntentService();
     }
 
-    public boolean validateInput(LocationReminder locationReminder) {
-
-        if ( locationReminder.getReminderTitle() == null ||
-                locationReminder.getReminderTitle().equals("")) {
-            Toast.makeText(this, "Please enter the title of the reminder.", Toast.LENGTH_SHORT).show();
-            return false;
-        }
-
-        if ( locationReminder.getStartDate() == null ||
-                locationReminder.getStartDate().equals("")) {
-            Toast.makeText(this, "Please enter the start date of the reminder", Toast.LENGTH_SHORT).show();
-            return false;
-        }
-
-        if ( locationReminder.getEndDate() == null ||
-                locationReminder.getEndDate().equals("")) {
-            Toast.makeText(this, "Please enter the end date of the reminder..", Toast.LENGTH_SHORT).show();
-            return false;
-        }
-
-        return true;
-    }
+//    public boolean validateInput(LocationReminder locationReminder) {
+//
+//        if ( locationReminder.getReminderTitle() == null ||
+//                locationReminder.getReminderTitle().equals("")) {
+//            Toast.makeText(this, "Please enter the title of the reminder.", Toast.LENGTH_SHORT).show();
+//            return false;
+//        }
+//
+//        if ( locationReminder.getStartDate() == null ||
+//                locationReminder.getStartDate().equals("")) {
+//            Toast.makeText(this, "Please enter the start date of the reminder", Toast.LENGTH_SHORT).show();
+//            return false;
+//        }
+//
+//        if ( locationReminder.getEndDate() == null ||
+//                locationReminder.getEndDate().equals("")) {
+//            Toast.makeText(this, "Please enter the end date of the reminder..", Toast.LENGTH_SHORT).show();
+//            return false;
+//        }
+//
+//        return true;
+//    }
 
     public void saveGeofenceClicked(View v){
 
@@ -186,17 +189,19 @@ public class LocationReminderActivity extends BaseActivity implements GoogleApiC
         locationReminder.setEndDate(endTextView.getText().toString());
         locationReminder.setReqID(locationReminder.toString());
 
-        locationService.addGeofence(locationReminder,endTimeMillis , mGoogleApiClient, this);
 
-        SQLiteDatabase db = DBConnection.getInstance().openWritableDB();
-        DatabaseManager dbManager = new DatabaseManager();
-        long id = dbManager.insertLocationReminder(db, locationReminder);
-        //Log
-        Log.e(TAG, "Location Reminder ID: " + id + " added.");
-        DBConnection.getInstance().closeDB(db);
-        Toast.makeText(this, "Reminder saved", Toast.LENGTH_SHORT).show();
+        if (validateInput(locationReminder)) {
+            locationService.addGeofence(locationReminder, endTimeMillis, mGoogleApiClient, this);
+            SQLiteDatabase db = DBConnection.getInstance().openWritableDB();
+            DatabaseManager dbManager = new DatabaseManager();
+            long id = dbManager.insertLocationReminder(db, locationReminder);
+            //Log
+            Log.e(TAG, "Location Reminder ID: " + id + " added.");
+            DBConnection.getInstance().closeDB(db);
+            Toast.makeText(LocationReminderActivity.this, "Reminder saved", Toast.LENGTH_SHORT).show();
+            finish();
+        }
 
-        finish();
     }
 
     @Override
@@ -213,5 +218,50 @@ public class LocationReminderActivity extends BaseActivity implements GoogleApiC
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
         Log.i(TAG, "Connection failed: ConnectionResult.getErrorCode() = " + connectionResult.getErrorCode());
+    }
+
+
+    public boolean validateInput(LocationReminder locationReminder) {
+
+        if (locationReminder.getReminderTitle() == null ||
+                locationReminder.getReminderTitle().equals("")) {
+            Toast.makeText(LocationReminderActivity.this, ApplicationConstants.NO_TITLE, Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        if (locationReminder.getStartDate() == null ||
+                locationReminder.getStartDate().equals("")) {
+            Toast.makeText(LocationReminderActivity.this, ApplicationConstants.NO_START_DATE, Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        if (locationReminder.getEndDate() == null ||
+                locationReminder.getEndDate().equals("")) {
+            Toast.makeText(LocationReminderActivity.this, ApplicationConstants.NO_END_DATE, Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        if (locationReminder.getLocation() == null ||
+                locationReminder.getLocation().equals("")) {
+            Toast.makeText(LocationReminderActivity.this, ApplicationConstants.NO_LOCATION, Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        // Date range validation
+        try {
+            if (DateUtilities.isPastDate(locationReminder.getEndDate()) == true) {
+                Toast.makeText(LocationReminderActivity.this,ApplicationConstants.FUTURE_DATE, Toast.LENGTH_SHORT).show();
+                return false;
+            }
+
+            if (DateUtilities.isDateInOrder(locationReminder.getStartDate(), locationReminder.getEndDate()) == false) {
+                Toast.makeText(LocationReminderActivity.this, ApplicationConstants.VALID_DATE, Toast.LENGTH_SHORT).show();
+                return false;
+            }
+        } catch (ParseException ex) {
+            ex.printStackTrace();
+        }
+
+        return true;
     }
 }

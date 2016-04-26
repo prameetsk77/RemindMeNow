@@ -32,7 +32,7 @@ import edu.asu.remindmenow.util.DBConnection;
 import edu.asu.remindmenow.util.DatabaseManager;
 import edu.asu.remindmenow.util.DateUtilities;
 
-public class UserReminderActivity extends AppCompatActivity {
+public class UserReminderActivity extends BaseActivity {
 
 
     EditText titleTextView;

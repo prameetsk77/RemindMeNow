@@ -11,7 +11,7 @@ import edu.asu.remindmenow.R;
 /**
  * Created by priyama on 3/25/2016.
  */
-public class SettingsActivity extends AppCompatActivity {
+public class SettingsActivity extends BaseActivity {
     public static final String PREFS_NAME = "MyReminderPrefsFile";
     Switch soundOn;
     Switch vibOn;

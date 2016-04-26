@@ -34,7 +34,7 @@ import edu.asu.remindmenow.util.DatabaseManager;
 /**
  * Created by priyama on 3/21/2016.
  */
-public class GeofenceReminderActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+public class GeofenceReminderActivity extends BaseActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     EditText textView;
     EditText endTextView;

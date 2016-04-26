@@ -23,13 +23,17 @@ import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
 import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 import com.google.android.gms.maps.model.LatLng;
 
+import java.text.ParseException;
 import java.util.Calendar;
 
 import edu.asu.remindmenow.Geofence.GeofenceIntentService;
 import edu.asu.remindmenow.R;
+import edu.asu.remindmenow.models.LocationReminder;
 import edu.asu.remindmenow.models.ZoneReminder;
+import edu.asu.remindmenow.util.ApplicationConstants;
 import edu.asu.remindmenow.util.DBConnection;
 import edu.asu.remindmenow.util.DatabaseManager;
+import edu.asu.remindmenow.util.DateUtilities;
 
 /**
  * Created by priyama on 3/21/2016.
@@ -212,17 +216,24 @@ public class GeofenceReminderActivity extends AppCompatActivity implements Googl
         geofenceReminder.setEndTime(endTimeTextView.getText().toString());
         geofenceReminder.setReqID(geofenceReminder.toString());
 
-        System.out.println("geo " + geofenceReminder.getEndTime());
-        geofenceService.addGeofence(geofenceReminder,endTimeMillis , mGoogleApiClient, this);
 
-        SQLiteDatabase db = DBConnection.getInstance().openWritableDB();
-        DatabaseManager dbManager = new DatabaseManager();
-        long id = dbManager.insertZoneReminder(db, geofenceReminder);
-        //Log
-        Log.e(TAG, "Zone Reminder ID: " + id + " added.");
-        DBConnection.getInstance().closeDB(db);
-        Toast.makeText(this, "Reminder saved", Toast.LENGTH_SHORT).show();
-        finish();
+
+
+
+        if (validateInput(geofenceReminder)) {
+            System.out.println("geo " + geofenceReminder.getEndTime());
+            geofenceService.addGeofence(geofenceReminder, endTimeMillis, mGoogleApiClient, this);
+            SQLiteDatabase db = DBConnection.getInstance().openWritableDB();
+            DatabaseManager dbManager = new DatabaseManager();
+            long id = dbManager.insertZoneReminder(db, geofenceReminder);
+            //Log
+            Log.e(TAG, "Zone Reminder ID: " + id + " added.");
+            DBConnection.getInstance().closeDB(db);
+            Toast.makeText(this, "Reminder saved", Toast.LENGTH_SHORT).show();
+            DBConnection.getInstance().closeDB(db);
+            Toast.makeText(GeofenceReminderActivity.this, "Reminder saved", Toast.LENGTH_SHORT).show();
+            finish();
+        }
     }
 
     @Override
@@ -242,24 +253,68 @@ public class GeofenceReminderActivity extends AppCompatActivity implements Googl
     }
 
 
+//    public boolean validateInput(ZoneReminder zoneReminder) {
+//
+//        if (zoneReminder.getReminderTitle() == null ||
+//                zoneReminder.getReminderTitle().equals("")) {
+//            Toast.makeText(this, "Please enter the title of the reminder.", Toast.LENGTH_SHORT).show();
+//            return false;
+//        }
+//
+//        if (zoneReminder.getStartDate() == null ||
+//                zoneReminder.getStartDate().equals("")) {
+//            Toast.makeText(this, "Please enter the start date of the reminder", Toast.LENGTH_SHORT).show();
+//            return false;
+//        }
+//
+//        if (zoneReminder.getEndDate() == null ||
+//                zoneReminder.getEndDate().equals("")) {
+//            Toast.makeText(this, "Please enter the end date of the reminder..", Toast.LENGTH_SHORT).show();
+//            return false;
+//        }
+//
+//        return true;
+//    }
+
     public boolean validateInput(ZoneReminder zoneReminder) {
 
         if (zoneReminder.getReminderTitle() == null ||
                 zoneReminder.getReminderTitle().equals("")) {
-            Toast.makeText(this, "Please enter the title of the reminder.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(GeofenceReminderActivity.this, ApplicationConstants.NO_TITLE, Toast.LENGTH_SHORT).show();
             return false;
         }
 
         if (zoneReminder.getStartDate() == null ||
                 zoneReminder.getStartDate().equals("")) {
-            Toast.makeText(this, "Please enter the start date of the reminder", Toast.LENGTH_SHORT).show();
+            Toast.makeText(GeofenceReminderActivity.this, ApplicationConstants.NO_START_DATE, Toast.LENGTH_SHORT).show();
             return false;
         }
 
         if (zoneReminder.getEndDate() == null ||
                 zoneReminder.getEndDate().equals("")) {
-            Toast.makeText(this, "Please enter the end date of the reminder..", Toast.LENGTH_SHORT).show();
+            Toast.makeText(GeofenceReminderActivity.this, ApplicationConstants.NO_END_DATE, Toast.LENGTH_SHORT).show();
             return false;
+        }
+
+        if (zoneReminder.getLocation() == null ||
+                zoneReminder.getLocation().equals("")) {
+            Toast.makeText(GeofenceReminderActivity.this, ApplicationConstants.NO_LOCATION, Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        // Date range validation
+        try {
+            if (DateUtilities.isPastDate(zoneReminder.getEndDate(), zoneReminder.getEndTime()) == true) {
+                Toast.makeText(GeofenceReminderActivity.this,ApplicationConstants.FUTURE_DATE, Toast.LENGTH_SHORT).show();
+                return false;
+            }
+
+            if (DateUtilities.isDateInOrder(zoneReminder.getStartDate(), zoneReminder.getEndDate(), zoneReminder.getStartTime(), zoneReminder.getEndTime()) == false) {
+                Toast.makeText(GeofenceReminderActivity.this, ApplicationConstants.VALID_DATE, Toast.LENGTH_SHORT).show();
+                return false;
+            }
+        } catch (ParseException ex) {
+            ex.printStackTrace();
         }
 
         return true;

@@ -67,6 +67,42 @@ public class DatabaseManager {
         return null;
     }
 
+    public void deleteReminder(SQLiteDatabase db, long reminderId) {
+
+
+        try {
+
+            Cursor cursor =  db.rawQuery( "select * from " + DBHelper.RM_REMINDER_TABLE_NAME+
+                    " WHERE " + DBHelper.RM_REMINDER_ID +" = \""+reminderId+"\"", null );
+
+            if (cursor.moveToFirst()) {
+
+                long timeId = cursor.getLong(cursor.getColumnIndex(DBHelper.RM_REMINDER_TIME_ID));
+                deleteTime(db,timeId);
+
+                //switch
+                // Remove from user - reminder ref table
+                deleteRem_User_Ref(db, reminderId);
+
+                String table = DBHelper.RM_REMINDER_TABLE_NAME;
+                String whereClause = "_id" + "=?";
+                String[] whereArgs = new String[] { String.valueOf(reminderId) };
+                db.delete(table, whereClause, whereArgs);
+
+            }
+
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            String errorCode = ApplicationConstants.SYSTEM_FAILURE;
+            Message message = new Message();
+            message.setCode(errorCode);
+            message.setDescription(ex.getMessage());
+            throw new ApplicationRuntimeException(message);
+        }
+
+    }
+
     public long isUserPresentInReminder(SQLiteDatabase db, String userId) {
 
         Cursor cursor =  db.rawQuery( "select * from " + DBHelper.RM_REMINDER_USER_REF_TABLE_NAME+
@@ -506,7 +542,7 @@ public class DatabaseManager {
 
     public void deleteTime (SQLiteDatabase db, long timeId) {
         String table = DBHelper.RM_TIME_TABLE_NAME;
-        String whereClause = "_id" + "=?";
+        String whereClause = DBHelper.RM_TIME_ID + "=?";
         String[] whereArgs = new String[] { String.valueOf(timeId) };
         db.delete(table, whereClause, whereArgs);
     }

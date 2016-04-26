@@ -1,4 +1,4 @@
-package edu.asu.remindmenow.Location;
+package edu.asu.remindmenow.location;
 
 import android.app.PendingIntent;
 import android.content.Intent;
@@ -50,7 +50,7 @@ public class Location_GeofenceIntentService implements GoogleApiClient.OnConnect
                 .setCircularRegion(
                         coordinates.latitude,
                         coordinates.longitude,
-                        100                                         // defines the geofence radius
+                        500                                         // defines the geofence radius
                 )
                 .setExpirationDuration(endTime)
                 .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER |
@@ -63,12 +63,12 @@ public class Location_GeofenceIntentService implements GoogleApiClient.OnConnect
 
         if (!mGoogleApiClient.isConnected()) {
             Log.e(TAG, "Google API Not Connected");
-            Toast.makeText(caller, "Geofence Client not Connected", Toast.LENGTH_SHORT).show();
+            Toast.makeText(caller, "Location Client not Connected", Toast.LENGTH_SHORT).show();
             return;
         }
         else{
-            Toast.makeText(caller, "Geofence Client Connected", Toast.LENGTH_SHORT).show();
-            new NotificationService().notify("GEOFENCE","Geofence Client Connected", caller);
+
+            Log.e(TAG, "Location Client Connected");
         }
 
         try {

@@ -66,6 +66,6 @@ public class ZoneReminder extends Reminder{
     public String getReqID(){return ReqID;}
     @Override
     public String toString() {
-        return (getReminderTitle()+ getStartDate() + getEndDate() + getStartTime() + getEndTime() + getLocation() + getCoordinates()).toString();
+        return (getReminderTitle());//+ getStartDate() + getEndDate() + getStartTime() + getEndTime()  + getCoordinates()).toString();
     }
 }

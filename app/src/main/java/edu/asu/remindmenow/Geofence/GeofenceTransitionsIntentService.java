@@ -1,9 +1,7 @@
-package edu.asu.remindmenow.Geofence;
+package edu.asu.remindmenow.geofence;
 
 import android.app.IntentService;
 import android.content.Intent;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.util.Log;
 
 import com.google.android.gms.location.Geofence;
@@ -12,7 +10,6 @@ import com.google.android.gms.location.GeofencingEvent;
 import java.util.List;
 
 import edu.asu.remindmenow.R;
-import edu.asu.remindmenow.Geofence.GeofenceErrorMessages;
 import edu.asu.remindmenow.activities.MainActivity;
 import edu.asu.remindmenow.services.NotificationService;
 
@@ -44,6 +41,9 @@ public class GeofenceTransitionsIntentService extends IntentService {
         super(name);
     }
 
+    public  GeofenceTransitionsIntentService() {
+        super(null);
+    }
     @Override
     public void onCreate() {
         super.onCreate();
@@ -64,8 +64,7 @@ public class GeofenceTransitionsIntentService extends IntentService {
         int geofenceTransition = geofencingEvent.getGeofenceTransition();
 
         // Test that the reported transition was of interest.
-        if (geofenceTransition == Geofence.GEOFENCE_TRANSITION_ENTER ||
-                geofenceTransition == Geofence.GEOFENCE_TRANSITION_EXIT) {
+        if (geofenceTransition == Geofence.GEOFENCE_TRANSITION_EXIT) {
 
             // Get the geofences that were triggered. A single event can trigger
             // multiple geofences.
@@ -93,7 +92,14 @@ public class GeofenceTransitionsIntentService extends IntentService {
 
             }
             */
-            new NotificationService().notify("GEOFENCE", "In Zone: " + geofenceTransitionDetails , this);
+
+            for(int i=0;i<geofenceList.size();i++) {
+                String ID = geofenceList.get(i).getRequestId();
+                //find from database function and delete
+                new NotificationService().notify("Zone Reminder",  ID , this);
+
+            }
+
             Log.i(TAG, geofenceTransitionDetails);
         } else {
             // Log the error.

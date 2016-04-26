@@ -1,4 +1,4 @@
-package edu.asu.remindmenow.Geofence;
+package edu.asu.remindmenow.geofence;
 
 /**
  * source https://github.com/googlesamples/android-play-location/blob/master/Geofencing/app/src/main/java/com/google/android/gms/location/sample/geofencing/GeofenceErrorMessages.java.

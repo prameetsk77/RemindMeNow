@@ -14,7 +14,6 @@ import java.text.ParseException;
 
 import edu.asu.remindmenow.bluetooth.BluetoothAdvertiser;
 import edu.asu.remindmenow.bluetooth.BluetoothReceiver;
-import edu.asu.remindmenow.models.Reminder;
 import edu.asu.remindmenow.models.UserReminder;
 import edu.asu.remindmenow.services.NotificationService;
 import edu.asu.remindmenow.userManager.UserSession;
@@ -32,8 +31,10 @@ public class UserReminderService extends Service implements BluetoothReceiver.Bl
     private final IBinder mBinder = new LocalBinder();
     private BluetoothAdvertiser mAdvertiser;
     private BluetoothReceiver mReceiver;
+    private Runnable mRunnable;
+    Handler mHandler = new Handler();
+
     private static String TAG = "UserReminderService";
-    Handler handler = new Handler();
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -61,6 +62,9 @@ public class UserReminderService extends Service implements BluetoothReceiver.Bl
 
     private void startDiscovery () {
         Log.i(TAG, "startDiscovery");
+        if (mReceiver != null) {
+            mReceiver.stopDiscovery();
+        }
         mReceiver = new BluetoothReceiver(this,this);
         mReceiver.startDiscovery();
     }
@@ -112,12 +116,20 @@ public class UserReminderService extends Service implements BluetoothReceiver.Bl
     @Override
     public void didFinishDiscovery() {
 
-        handler.postDelayed(new Runnable(){
-            @Override
-            public void run(){
-                startDiscovery();
-            }
-        }, 3000);
+        if (mRunnable != null) {
+            mHandler.removeCallbacks(mRunnable);
+
+        } else {
+            mRunnable = new Runnable(){
+                @Override
+                public void run(){
+                    startDiscovery();
+                }
+            };
+        }
+
+
+        mHandler.postDelayed(mRunnable, 3000);
 
     }
 }

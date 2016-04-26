@@ -18,4 +18,10 @@
     <string name="geofence_transition_exited">Exited Geofence Area</string>
     <string name="unknown_geofence_transition">Unknown Geofence Transition</string>
 
+
+    <string name="remindmenow">Remind me now</string>
+    <string name="friendReminder">Friend Reminder</string>
+    <string name="zoneReminder">Zone Reminder</string>
+    <string name="locationReminder">Location Reminder</string>
+
 </resources>

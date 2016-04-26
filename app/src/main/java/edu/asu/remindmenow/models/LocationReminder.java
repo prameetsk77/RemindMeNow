@@ -49,6 +49,6 @@ public class LocationReminder extends Reminder{
     public String getReqID(){return ReqID;}
     @Override
     public String toString() {
-        return (getReminderTitle()+ getStartDate() + getEndDate() + getLocation() + getCoordinates()).toString();
+        return (getReminderTitle());//+ getStartDate() + getEndDate() + getLocation() + getCoordinates()).toString();
     }
 }

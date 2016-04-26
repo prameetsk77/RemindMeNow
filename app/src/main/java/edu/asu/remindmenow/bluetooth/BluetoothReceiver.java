@@ -21,15 +21,16 @@ public class BluetoothReceiver {
         mContext = ctx;
         mInterface = interf;
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
+        mContext.registerReceiver(mReceiver, filter);
+        filter = new IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
+        mContext.registerReceiver(mReceiver, filter);
     }
 
     public void startDiscovery () {
 
         if (!isDiscovering()) {
-            IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
-            mContext.registerReceiver(mReceiver, filter);
-            filter = new IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
-            mContext.registerReceiver(mReceiver, filter);
+
 
             mBluetoothAdapter.startDiscovery();
         }

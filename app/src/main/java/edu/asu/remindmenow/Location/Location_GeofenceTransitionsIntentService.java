@@ -1,4 +1,4 @@
-package edu.asu.remindmenow.Location;
+package edu.asu.remindmenow.location;
 
 import android.app.IntentService;
 import android.app.NotificationManager;
@@ -39,6 +39,9 @@ public class Location_GeofenceTransitionsIntentService extends IntentService {
         super(name);
     }
 
+    public Location_GeofenceTransitionsIntentService() {
+        super(null);
+    }
     @Override
     public void onCreate() {
         super.onCreate();
@@ -59,8 +62,7 @@ public class Location_GeofenceTransitionsIntentService extends IntentService {
         int geofenceTransition = geofencingEvent.getGeofenceTransition();
 
         // Test that the reported transition was of interest.
-        if (geofenceTransition == Geofence.GEOFENCE_TRANSITION_ENTER ||
-                geofenceTransition == Geofence.GEOFENCE_TRANSITION_EXIT) {
+        if ( geofenceTransition == Geofence.GEOFENCE_TRANSITION_ENTER) {
 
             // Get the geofences that were triggered. A single event can trigger
             // multiple geofences.
@@ -87,7 +89,14 @@ public class Location_GeofenceTransitionsIntentService extends IntentService {
                 }
 
             }
-            */            new NotificationService().notify("GEOFENCE", "In Zone: " + geofenceTransitionDetails , this);
+            */
+            for(int i=0;i<geofenceList.size();i++) {
+                String ID = geofenceList.get(i).getRequestId();
+                //find from database function and delete
+                new NotificationService().notify("Location Reminder",  ID , this);
+
+            }
+
             Log.i(TAG, geofenceTransitionDetails);
         } else {
             // Log the error.

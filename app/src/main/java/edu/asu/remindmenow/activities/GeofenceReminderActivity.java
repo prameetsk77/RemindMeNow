@@ -25,7 +25,7 @@ import com.google.android.gms.maps.model.LatLng;
 
 import java.util.Calendar;
 
-import edu.asu.remindmenow.Geofence.GeofenceIntentService;
+import edu.asu.remindmenow.geofence.GeofenceIntentService;
 import edu.asu.remindmenow.R;
 import edu.asu.remindmenow.models.ZoneReminder;
 import edu.asu.remindmenow.util.DBConnection;

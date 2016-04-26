@@ -54,7 +54,7 @@ public class DateUtilities {
 
     public static boolean isDateInOrder (String startDate, String endDate, String startTime, String endTime)
             throws ParseException {
-        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy HH:mm");
         Date startDateObj = sdf.parse(startDate+" "+startTime);
         Date endDateObj = sdf.parse(endDate +" "+endTime);
 

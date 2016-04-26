@@ -216,10 +216,6 @@ public class GeofenceReminderActivity extends BaseActivity implements GoogleApiC
         geofenceReminder.setEndTime(endTimeTextView.getText().toString());
         geofenceReminder.setReqID(geofenceReminder.toString());
 
-
-
-
-
         if (validateInput(geofenceReminder)) {
             System.out.println("geo " + geofenceReminder.getEndTime());
             geofenceService.addGeofence(geofenceReminder, endTimeMillis, mGoogleApiClient, this);
@@ -230,7 +226,6 @@ public class GeofenceReminderActivity extends BaseActivity implements GoogleApiC
             Log.e(TAG, "Zone Reminder ID: " + id + " added.");
             DBConnection.getInstance().closeDB(db);
             Toast.makeText(this, "Reminder saved", Toast.LENGTH_SHORT).show();
-            DBConnection.getInstance().closeDB(db);
             Toast.makeText(GeofenceReminderActivity.this, "Reminder saved", Toast.LENGTH_SHORT).show();
             finish();
         }

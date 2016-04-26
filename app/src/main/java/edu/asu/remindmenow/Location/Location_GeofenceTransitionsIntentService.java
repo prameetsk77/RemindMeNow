@@ -28,6 +28,7 @@ import edu.asu.remindmenow.models.LocationReminder;
 import edu.asu.remindmenow.services.NotificationService;
 import edu.asu.remindmenow.util.DBConnection;
 import edu.asu.remindmenow.util.DatabaseManager;
+import edu.asu.remindmenow.util.DateUtilities;
 
 
 /**
@@ -81,6 +82,7 @@ public class Location_GeofenceTransitionsIntentService extends IntentService {
         // Get the transition type.
         int geofenceTransition = geofencingEvent.getGeofenceTransition();
 
+        /*
         Date startDate = null;
         SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
         try {
@@ -97,37 +99,42 @@ public class Location_GeofenceTransitionsIntentService extends IntentService {
             e.printStackTrace();
         }
         long endDatemillis = endDate.getTime();
+        */
+
 
         // Test that the reported transition was of interest.
-        if ( geofenceTransition == Geofence.GEOFENCE_TRANSITION_ENTER  && System.currentTimeMillis() > startDatemillis && System.currentTimeMillis() < endDatemillis) {
+        try {
+            if ( geofenceTransition == Geofence.GEOFENCE_TRANSITION_ENTER && !DateUtilities.isPastDate(locationReminder.getEndDate()) && !DateUtilities.isFutureDate(locationReminder.getStartDate())) {
 
-            // Get the geofences that were triggered. A single event can trigger
-            // multiple geofences.
-            List triggeringGeofences = geofencingEvent.getTriggeringGeofences();
+                // Get the geofences that were triggered. A single event can trigger
+                // multiple geofences.
+                List triggeringGeofences = geofencingEvent.getTriggeringGeofences();
 
+                // Get the transition details as a String.
+                String geofenceTransitionDetails = getGeofenceTransitionDetails(
+                        this,
+                        geofenceTransition,
+                        triggeringGeofences
+                );
+                new NotificationService().notify("L", "Location Reminder",  locationReminder.getReminderTitle() , this);
+                // Send notification and log the transition details.
+                //sendNotification(geofenceTransitionDetails);
 
-            // Get the transition details as a String.
-            String geofenceTransitionDetails = getGeofenceTransitionDetails(
-                    this,
-                    geofenceTransition,
-                    triggeringGeofences
-            );
-            new NotificationService().notify("L", "Location Reminder",  locationReminder.getReminderTitle() , this);
-            // Send notification and log the transition details.
-            //sendNotification(geofenceTransitionDetails);
-
-            Log.i(TAG, geofenceTransitionDetails);
-        } else if ( System.currentTimeMillis() < startDatemillis) {
-            Toast.makeText(this, TAG + " Transition before Start Date", Toast.LENGTH_SHORT).show();
-            //delete from dB
-        }
-        else if (System.currentTimeMillis() > endDatemillis) {
-            Toast.makeText(this, TAG + " Transition after end Date", Toast.LENGTH_SHORT).show();
-            //delete from dB
-        }
-        else {
-            // Log the error.
-            Log.e(TAG, "Invalid Transition");
+                Log.i(TAG, geofenceTransitionDetails);
+            } else if ( DateUtilities.isPastDate(locationReminder.getEndDate())) {
+                Log.e(TAG, "System time has past reminder end date");
+                //delete from dB
+            }
+            else if ( DateUtilities.isFutureDate(locationReminder.getStartDate() )) {
+                Log.e(TAG, "System time has before reminder start date" );
+                //delete from dB
+            }
+            else {
+                // Log the error.
+                Log.e(TAG, "Invalid Transition");
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
         }
 
     }

@@ -6,11 +6,17 @@ import android.app.PendingIntent;
 import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
+
+import java.util.Set;
 
 import edu.asu.remindmenow.R;
 import edu.asu.remindmenow.activities.HomeActivity;
 import edu.asu.remindmenow.activities.MainActivity;
+import edu.asu.remindmenow.activities.SettingsActivity;
 
 /**
  * Created by priyama on 4/5/2016.
@@ -18,6 +24,7 @@ import edu.asu.remindmenow.activities.MainActivity;
 public class NotificationService {
 
     public void notify(String reminderType, String notificationTitle, String notificationMessage, Context ctx){
+
         int imageName=0;
         switch (reminderType){
             case "U": imageName=R.drawable.user_icon_1;
@@ -26,19 +33,31 @@ public class NotificationService {
                        break;
             case "Z": imageName=R.drawable.home_icon_1;
                       break;
-
         }
 
+        SharedPreferences settings = ctx.getSharedPreferences(SettingsActivity.PREFS_NAME, 0);
+
+        boolean isVibOn = settings.getBoolean("vibOn",true);
+        long vibration[] = new long[] { 0, 0, 0, 0 };
+        if(isVibOn){
+            vibration = new long[] { 1000, 1000, 1000, 1000, 1000 };
+        }
 
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(ctx)
                         .setSmallIcon(imageName)
                         .setContentTitle(notificationTitle)
                         .setContentText(notificationMessage)
-                        .setVibrate(new long[] { 1000, 1000, 1000, 1000, 1000 });;
+                        .setVibrate(vibration);
+
+
+        boolean isSoundOn = settings.getBoolean("soundOn",true);
+        if(isSoundOn){
+            Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+            mBuilder.setSound(alarmSound);
+        }
 
         Intent resultIntent = new Intent(ctx, HomeActivity.class);
-
 
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(ctx);
         stackBuilder.addParentStack(HomeActivity.class);

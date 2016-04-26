@@ -293,23 +293,36 @@ public class DatabaseManager {
     public ZoneReminder getZoneReminderFromReqID(SQLiteDatabase db, String ReqID) {
 
         try {
-            Cursor cursor =  db.rawQuery( "select * from " + DBHelper.RM_REMINDER_TABLE_NAME+
+            Cursor cursor =  db.rawQuery( "select * from " + DBHelper.RM_LOCATION_TABLE_NAME+
                     " WHERE " + DBHelper.RM_LOC_REQ_ID +" = \""+ReqID+"\"", null );
 
             if (cursor.moveToFirst()) {
+                long locID = cursor.getLong(cursor.getColumnIndex(DBHelper.RM_LOC_ID));
 
-                ZoneReminder reminder = new ZoneReminder();
-                reminder.setReminderTitle(cursor.getString(cursor.getColumnIndex(DBHelper.RM_REMINDER_TITLE)));
-                reminder.setReqID(ReqID);
+                cursor =  db.rawQuery( "select * from " + DBHelper.RM_REMINDER_LOC_REF_TABLE_NAME +
+                        " WHERE " + DBHelper.RM_LOC_ID +" = \""+locID+"\"", null );
 
-                long reminderId = cursor.getLong(cursor.getColumnIndex(DBHelper.RM_REMINDER_ID));
+                if(cursor.moveToFirst()) {
+                    long reminderId = cursor.getLong(cursor.getColumnIndex(DBHelper.RM_REMINDER_ID));
 
-                long timeId = cursor.getLong(cursor.getColumnIndex(DBHelper.RM_REMINDER_TIME_ID));
-                Time time = getTime(db, timeId);
-                reminder.setStartDate(time.getStartDate());
-                reminder.setEndDate(time.getEndDate());
-                setZoneReminderAddress(db, reminderId, reminder);
-                return reminder;
+                    cursor =  db.rawQuery( "select * from " + DBHelper.RM_REMINDER_TABLE_NAME +
+                            " WHERE " + DBHelper.RM_REMINDER_ID +" = \""+reminderId+"\"", null );
+                    if(cursor.moveToFirst()) {
+
+                        ZoneReminder reminder = new ZoneReminder();
+                        reminder.setReminderTitle(cursor.getString(cursor.getColumnIndex(DBHelper.RM_REMINDER_TITLE)));
+                        reminder.setReqID(ReqID);
+
+                        long timeId = cursor.getLong(cursor.getColumnIndex(DBHelper.RM_REMINDER_TIME_ID));
+                        Time time = getTime(db, timeId);
+                        reminder.setStartDate(time.getStartDate());
+                        reminder.setEndDate(time.getEndDate());
+                        reminder.setStartTime(time.getStartTime());
+                        reminder.setEndTime(time.getEndTime());
+                        setZoneReminderAddress(db, reminderId, reminder);
+                        return reminder;
+                    }
+                }
             }
             return null;
 
@@ -423,29 +436,40 @@ public class DatabaseManager {
             message.setDescription(ex.getMessage());
             throw new ApplicationRuntimeException(message);
         }
-
     }
 
     public LocationReminder getLocationReminderFromReqID(SQLiteDatabase db, String ReqID) {
 
         try {
-            Cursor cursor =  db.rawQuery( "select * from " + DBHelper.RM_REMINDER_TABLE_NAME+
+            Cursor cursor =  db.rawQuery( "select * from " + DBHelper.RM_LOCATION_TABLE_NAME+
                     " WHERE " + DBHelper.RM_LOC_REQ_ID +" = \""+ReqID+"\"", null );
 
             if (cursor.moveToFirst()) {
+                long locID = cursor.getLong(cursor.getColumnIndex(DBHelper.RM_LOC_ID));
 
-                LocationReminder reminder = new LocationReminder();
-                reminder.setReminderTitle(cursor.getString(cursor.getColumnIndex(DBHelper.RM_REMINDER_TITLE)));
-                reminder.setReqID(ReqID);
+                cursor =  db.rawQuery( "select * from " + DBHelper.RM_REMINDER_LOC_REF_TABLE_NAME +
+                        " WHERE " + DBHelper.RM_LOC_ID +" = \""+locID+"\"", null );
 
-                long reminderId = cursor.getLong(cursor.getColumnIndex(DBHelper.RM_REMINDER_ID));
+                if(cursor.moveToFirst()) {
+                    long reminderId = cursor.getLong(cursor.getColumnIndex(DBHelper.RM_REMINDER_ID));
 
-                long timeId = cursor.getLong(cursor.getColumnIndex(DBHelper.RM_REMINDER_TIME_ID));
-                Time time = getTime(db, timeId);
-                reminder.setStartDate(time.getStartDate());
-                reminder.setEndDate(time.getEndDate());
-                setLocationReminderAddress(db, reminderId, reminder);
-                return reminder;
+                    cursor = db.rawQuery("select * from " + DBHelper.RM_REMINDER_TABLE_NAME +
+                            " WHERE " + DBHelper.RM_REMINDER_ID + " = \"" + reminderId + "\"", null);
+
+                    if (cursor.moveToFirst()) {
+
+                        LocationReminder reminder = new LocationReminder();
+                        reminder.setReminderTitle(cursor.getString(cursor.getColumnIndex(DBHelper.RM_REMINDER_TITLE)));
+                        reminder.setReqID(ReqID);
+
+                        long timeId = cursor.getLong(cursor.getColumnIndex(DBHelper.RM_REMINDER_TIME_ID));
+                        Time time = getTime(db, timeId);
+                        reminder.setStartDate(time.getStartDate());
+                        reminder.setEndDate(time.getEndDate());
+                        setLocationReminderAddress(db, reminderId, reminder);
+                        return reminder;
+                    }
+                }
             }
             return null;
 

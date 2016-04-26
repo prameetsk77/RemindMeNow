@@ -8,6 +8,7 @@ import android.util.Log;
 
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingEvent;
+import com.google.android.gms.location.LocationServices;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -86,7 +87,7 @@ public class GeofenceTransitionsIntentService extends IntentService {
         int geofenceTransition = geofencingEvent.getGeofenceTransition();
 
         Date startDate = null;
-        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy HH:mm");
         try {
             startDate = sdf.parse(zoneReminder.getStartDate()+" "+ zoneReminder.getStartTime());
         } catch (ParseException e) {
@@ -115,33 +116,9 @@ public class GeofenceTransitionsIntentService extends IntentService {
                     geofenceTransition,
                     triggeringGeofences
             );
-            new NotificationService().notify("Zone Reminder",  zoneReminder.getReminderTitle() , this);
+            new NotificationService().notify("Z" , "Zone Reminder",  zoneReminder.getReminderTitle() , this);
             // Send notification and log the transition details.
             //sendNotification(geofenceTransitionDetails);
-
-<<<<<<< HEAD
-=======
-            List<Geofence> geofenceList = geofencingEvent.getTriggeringGeofences();
-            /*
-            for(int i=0;i<geofenceList.size();i++) {
-                String ID = geofenceList.get(i).getRequestId();
-                //find from database function and delete
-                if (deletefromdatabase()) {
-
-                    //remove from google API
-                }
-
-            }
-            */
-
-            for(int i=0;i<geofenceList.size();i++) {
-                String ID = geofenceList.get(i).getRequestId();
-                //find from database function and delete
-                new NotificationService().notify("Z","Zone Reminder",  ID , this);
-
-            }
-
->>>>>>> upstream/master
             Log.i(TAG, geofenceTransitionDetails);
         }
         else if ( System.currentTimeMillis() < startDatemillis) {
@@ -174,58 +151,6 @@ public class GeofenceTransitionsIntentService extends IntentService {
         String triggeringGeofencesIdsString = TextUtils.join(", ", triggeringGeofencesIdsList);
 
         return geofenceTransitionString + ": " + triggeringGeofencesIdsString;
-    }
-
-    /**
-     * Posts a notification in the notification bar when a transition is detected.
-     * If the user clicks the notification, control goes to the MainActivity.
-     */
-    private void sendNotification(String notificationDetails) {
-        // Create an explicit content Intent that starts the main Activity.
-        Intent notificationIntent = new Intent(getApplicationContext(), MainActivity.class);
-
-        // Construct a task stack.
-        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-
-        // Add the main Activity to the task stack as the parent.
-        stackBuilder.addParentStack(MainActivity.class);
-
-        // Push the content Intent onto the stack.
-        stackBuilder.addNextIntent(notificationIntent);
-
-        // Get a PendingIntent containing the entire back stack.
-        PendingIntent notificationPendingIntent =
-                stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
-
-        // Get a notification builder that's compatible with platform versions >= 4
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
-
-
-        /*
-        // Define the notification settings.
-        builder.setSmallIcon(R.drawable.ic_launcher)
-                // In a real app, you may want to use a library like Volley
-                // to decode the Bitmap.
-                .setLargeIcon(BitmapFactory.decodeResource(getResources(),
-                        R.drawable.ic_launcher))
-                .setColor(Color.RED)
-                .setContentTitle(notificationDetails)
-                .setContentText(getString(R.string.geofence_transition_notification_text))
-                .setContentIntent(notificationPendingIntent);
-
-        */
-
-        new NotificationService().notify("Z","GEOFENCE", "In Zone: " + notificationDetails , this);
-
-        // Dismiss notification once the user touches it.
-        builder.setAutoCancel(true);
-
-        // Get an instance of the Notification manager
-        NotificationManager mNotificationManager =
-                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-
-        // Issue the notification
-        mNotificationManager.notify(0, builder.build());
     }
 
     /**

@@ -87,20 +87,6 @@ public class GeofenceIntentService implements GoogleApiClient.OnConnectionFailed
         }
     }
 
-/*
-    //Deleting Zone Reminder
-    public void removeGeofence(ArrayList <String> ReqID){
-
-        LocationServices.GeofencingApi.removeGeofences(
-            mGoogleApiClient,
-            // This is the same RequestID as given below. See addGeofence() for how requestID is formulated
-                ReqID
-        ).setResultCallback(this); // Result processed in onResult().
-
-        // Delete From Database. Ask @Jithin Roy For it
-    }
-*/
-
     private void logSecurityException(SecurityException securityException) {
         Log.e(TAG, "Invalid location permission. " +
                 "You need to use ACCESS_FINE_LOCATION with geofences", securityException);
@@ -125,6 +111,16 @@ public class GeofenceIntentService implements GoogleApiClient.OnConnectionFailed
         // calling addGeofences() and removeGeofences().
         return PendingIntent.getService(caller.getApplicationContext(), 0, intent, PendingIntent.
                 FLAG_UPDATE_CURRENT);
+    }
+
+    //Deleting Zone Reminder
+    public void removeGeofence(ArrayList <String> ReqID){
+        LocationServices.GeofencingApi.removeGeofences(
+                mGoogleApiClient,
+                // This is the same RequestID as given below. See addGeofence() for how requestID is formulated
+                ReqID
+        ).setResultCallback(this); // Result processed in onResult().
+        // Delete From Database. Ask @Jithin Roy For it
     }
 
     @Override

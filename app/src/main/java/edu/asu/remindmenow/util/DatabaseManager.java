@@ -42,10 +42,7 @@ public class DatabaseManager {
             Reminder reminder=new Reminder();
             reminder.setReminderTitle(cursor.getString(cursor.getColumnIndex(DBHelper.RM_REMINDER_TITLE)));
             reminder.setId(cursor.getLong(cursor.getColumnIndex(DBHelper.RM_REMINDER_ID)));
-//            String reminderType = cursor.getString(cursor.getColumnIndex(DBHelper.RM_REMINDER_TYPE));
-//            if (reminderType.equals("U")) {
-//
-//            }
+            reminder.setReminderType(cursor.getString(cursor.getColumnIndex(DBHelper.RM_REMINDER_TYPE)));
             reminderList.add(reminder);
             cursor.moveToNext();
         }
@@ -188,6 +185,8 @@ public class DatabaseManager {
 
                 UserReminder reminder = new UserReminder();
                 reminder.setReminderTitle(cursor.getString(cursor.getColumnIndex(DBHelper.RM_REMINDER_TITLE)));
+                reminder.setReminderType(cursor.getString(cursor.getColumnIndex(DBHelper.RM_REMINDER_TYPE)));
+                reminder.setId(cursor.getLong(cursor.getColumnIndex(DBHelper.RM_REMINDER_ID)));
 
                 long timeId = cursor.getLong(cursor.getColumnIndex(DBHelper.RM_REMINDER_TIME_ID));
                 Time time = getTime(db, timeId);

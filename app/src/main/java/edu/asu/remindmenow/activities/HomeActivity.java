@@ -1,5 +1,7 @@
 package edu.asu.remindmenow.activities;
 
+import android.app.NotificationManager;
+import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -13,6 +15,7 @@ import com.facebook.login.LoginManager;
 
 import edu.asu.remindmenow.R;
 import edu.asu.remindmenow.bluetooth.BluetoothAdvertiser;
+import edu.asu.remindmenow.models.Reminder;
 import edu.asu.remindmenow.services.NotificationService;
 import edu.asu.remindmenow.userManager.UserSession;
 import edu.asu.remindmenow.userReminder.UserReminderService;
@@ -30,14 +33,32 @@ public class HomeActivity extends BaseActivity {
         Log.i(TAG, "Create home activity");
 
 
-//        SQLiteDatabase db = DBConnection.getInstance().openWritableDB();
-//        DatabaseManager dbManager = new DatabaseManager();
-//        dbManager.isUserPresentInReminder(db,"10209187059889895");
-//        DBConnection.getInstance().closeDB(db);
-//        new NotificationService().notify("Hello World", "Shaitan", this);
+        Log.i(TAG, "On new intent");
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            long remId = extras.getLong("reminderId");
+            Log.i(TAG,"Started from notification - " + remId);
+                if (remId > 0) {
+                    SQLiteDatabase db = DBConnection.getInstance().openWritableDB();
+                    DatabaseManager dbManager = new DatabaseManager();
+                    Reminder reminder = dbManager.getReminder(db, remId);
+                    dbManager.deleteReminder(db,reminder.getId());
+                    DBConnection.getInstance().closeDB(db);
+
+                    NotificationManager mNotificationManager =
+                            (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                    mNotificationManager.cancelAll();
+                }
+
+        }
 
         // Start bluetooth service
         startService(new Intent(this, UserReminderService.class));
+
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
 
     }
 

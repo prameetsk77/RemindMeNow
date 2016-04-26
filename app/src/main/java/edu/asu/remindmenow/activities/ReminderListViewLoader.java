@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -102,7 +103,26 @@ public class ReminderListViewLoader extends BaseActivity {
                 vi = inflater.inflate(R.layout.reminder_list_row, null);
             TextView text = (TextView) vi.findViewById(R.id.header);
             text.setText(reminder.getReminderTitle());
+
+            ImageView imageView = (ImageView) vi.findViewById(R.id.image_header);
+            imageView.setBackgroundResource(getReminterTypeIcon(reminder));
+
             return vi;
         }
+    }
+
+    public int getReminterTypeIcon(Reminder reminder){
+        String reminderType=reminder.getReminderType();
+        int imageName=0;
+        switch (reminderType){
+            case "U": imageName=R.drawable.user_icon_1;
+                break;
+            case "L": imageName=R.drawable.map_icon_1;
+                break;
+            case "Z": imageName=R.drawable.home_icon_1;
+                break;
+
+        }
+        return imageName;
     }
 }

@@ -16,8 +16,11 @@ public class BluetoothReceiver {
     private Context mContext;
     private BluetoothAdapter mBluetoothAdapter;
     private BluetoothReceiverInterface mInterface;
+    private static String TAG = "BluetoothReceiver";
 
     public BluetoothReceiver(Context ctx, BluetoothReceiverInterface interf) {
+
+        Log.i(TAG, "Constructor");
         mContext = ctx;
         mInterface = interf;
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
@@ -30,8 +33,7 @@ public class BluetoothReceiver {
     public void startDiscovery () {
 
         if (!isDiscovering()) {
-
-
+            Log.i(TAG, "Strarting discovery " +  this);
             mBluetoothAdapter.startDiscovery();
         }
 
@@ -39,6 +41,7 @@ public class BluetoothReceiver {
 
     public void stopDiscovery () {
         if (isDiscovering()) {
+            Log.i(TAG, "Stop discovering " +  this);
             mBluetoothAdapter.cancelDiscovery();
         }
     }
@@ -58,7 +61,7 @@ public class BluetoothReceiver {
                 BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
                 String derp = device.getName();
                 if (derp != null) {
-                    Log.v("Bluetooth", derp);
+                    Log.i(TAG, "Device " +  derp + " " + this);
                     if (derp.startsWith("RM_")) {
                         Log.v("Bluetooth", "Entered the Found " + derp);
                         mInterface.didFoundDevice(derp);

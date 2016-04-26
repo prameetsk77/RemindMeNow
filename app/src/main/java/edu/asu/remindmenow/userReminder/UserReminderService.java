@@ -2,6 +2,7 @@ package edu.asu.remindmenow.userReminder;
 
 import android.app.Service;
 
+import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Binder;
@@ -55,17 +56,27 @@ public class UserReminderService extends Service implements BluetoothReceiver.Bl
         Log.i(TAG, "startAdvertiseService");
         String userID = UserSession.getInstance().getLoggedInUser().getId();
         String advId = "RM_"+userID;
-        mAdvertiser = new BluetoothAdvertiser(this);
+
+        if (mAdvertiser == null) {
+            mAdvertiser = new BluetoothAdvertiser(this);
+        }
+        //Disable bluetooth
+        BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        if (mBluetoothAdapter.isEnabled() == false) {
+            mBluetoothAdapter.enable();
+        }
         mAdvertiser.startAdvertising(advId);
 
     }
 
     private void startDiscovery () {
-        Log.i(TAG, "startDiscovery");
+        Log.i(TAG, "StartDiscovery " + this);
         if (mReceiver != null) {
             mReceiver.stopDiscovery();
+        } else {
+            mReceiver = new BluetoothReceiver(this,this);
         }
-        mReceiver = new BluetoothReceiver(this,this);
+
         mReceiver.startDiscovery();
     }
 

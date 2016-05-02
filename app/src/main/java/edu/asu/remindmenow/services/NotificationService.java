@@ -45,7 +45,9 @@ public class NotificationService {
             case "L": imageName=R.drawable.map_icon_1;
                 break;
             case "Z": imageName=R.drawable.home_icon_1;
-                      break;
+                break;
+            case "W": imageName=R.drawable.weather;
+                break;
         }
 
         SharedPreferences settings = ctx.getSharedPreferences(SettingsActivity.PREFS_NAME, 0);

@@ -1,10 +1,15 @@
 package edu.asu.remindmenow.activities;
 
+import android.app.AlarmManager;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -14,6 +19,7 @@ import android.view.View;
 import com.facebook.login.LoginManager;
 
 import edu.asu.remindmenow.R;
+import edu.asu.remindmenow.alarm.AlarmReceiver;
 import edu.asu.remindmenow.bluetooth.BluetoothAdvertiser;
 import edu.asu.remindmenow.models.Reminder;
 import edu.asu.remindmenow.services.NotificationService;
@@ -54,6 +60,7 @@ public class HomeActivity extends BaseActivity {
 
         // Start bluetooth service
         startService(new Intent(this, UserReminderService.class));
+        scheduleAlarm();
 
     }
 
@@ -103,4 +110,23 @@ public class HomeActivity extends BaseActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    //============================================================================
+
+    // Setup a recurring alarm every half hour
+    public void scheduleAlarm() {
+
+
+        if ( ContextCompat.checkSelfPermission( this, android.Manifest.permission.ACCESS_COARSE_LOCATION ) != PackageManager.PERMISSION_GRANTED ) {
+
+            ActivityCompat.requestPermissions( this, new String[] {  android.Manifest.permission.ACCESS_COARSE_LOCATION  },12 );
+        }
+
+        Intent intent = new Intent(getApplicationContext(), AlarmReceiver.class);
+        final PendingIntent pIntent = PendingIntent.getBroadcast(this, AlarmReceiver.REQUEST_CODE,
+                intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        long firstMillis = System.currentTimeMillis();
+        AlarmManager alarm = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
+        alarm.setInexactRepeating(AlarmManager.RTC_WAKEUP, firstMillis,
+                AlarmManager.INTERVAL_DAY, pIntent);
+    }
 }

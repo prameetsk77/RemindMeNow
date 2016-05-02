@@ -1,5 +1,6 @@
 package edu.asu.remindmenow.activities;
 
+import android.app.NotificationManager;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -31,6 +32,7 @@ public class ReminderListViewLoader extends BaseActivity {
 
     private  ListView mListView;
     private  ListViewAdapter mAdapter;
+    private static String TAG = "ReminderListViewLoader";
 
     public List<Reminder> getReminderList(){
         SQLiteDatabase db = DBConnection.getInstance().openWritableDB();
@@ -51,18 +53,26 @@ public class ReminderListViewLoader extends BaseActivity {
         mListView.setAdapter(mAdapter);
 
 
-        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                Log.i("ReminderListViewLoader", "On item click");
-//                Reminder rm = (Reminder)mAdapter.getItem(position);
-//                SQLiteDatabase db = DBConnection.getInstance().openWritableDB();
-//                DatabaseManager dbManager = new DatabaseManager();
-//                dbManager.deleteReminder(db,rm.getId());
-//                DBConnection.getInstance().closeDB(db);
+        Log.i(TAG, "On new intent");
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            long remId = extras.getLong("reminderId");
+            Log.i(TAG,"Started from notification - " + remId);
+            if (remId > 0) {
+                SQLiteDatabase db = DBConnection.getInstance().openWritableDB();
+                DatabaseManager dbManager = new DatabaseManager();
+                Reminder reminder = dbManager.getReminder(db, remId);
+                dbManager.deleteReminder(db,reminder.getId());
+                DBConnection.getInstance().closeDB(db);
 
+                NotificationManager mNotificationManager =
+                        (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                mNotificationManager.cancelAll();
             }
-        });
+
+        }
+
 
     }
 

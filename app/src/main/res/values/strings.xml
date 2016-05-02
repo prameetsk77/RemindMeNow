@@ -9,6 +9,8 @@
     <string name="action_reminder_history">All Reminders</string>
     <string name="facebook_app_id">442023749319578</string>
 
+    <string name="open_weather_api_key">5bcc7382eb31d43a2c7f10e1739c5e04</string>
+
     <string name="geofence_not_available">Geo Fence Unavailable</string>
     <string name="geofence_too_many_geofences">Too many GeoFences</string>
     <string name="geofence_too_many_pending_intents">Too many Pending Intents</string>

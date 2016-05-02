@@ -111,8 +111,8 @@ public class UserReminderService extends Service implements BluetoothReceiver.Bl
                 if (DateUtilities.isPastDate(reminder.getEndDate()) == false &&
                         DateUtilities.isFutureDate(reminder.getStartDate()) == false) {
 
-                    Log.i(TAG, "Reminder dates are in range. Should show notification");
-                    new NotificationService().notify("U", reminder.getReminderTitle()," ", this);
+                    Log.i(TAG, "Reminder dates are in range. Should show notification - " + reminder.getId());
+                    new NotificationService().notify(reminder, this);
 
                 }
             }

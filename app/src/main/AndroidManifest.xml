@@ -90,7 +90,8 @@
 
         <activity
             android:name=".activities.HomeActivity"
-            android:label="@string/remindmenow">
+            android:label="@string/remindmenow"
+            android:launchMode="singleInstance">
 
 
         </activity>

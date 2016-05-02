@@ -12,6 +12,8 @@ import android.util.Log;
 import edu.asu.remindmenow.R;
 import edu.asu.remindmenow.activities.HomeActivity;
 import edu.asu.remindmenow.activities.MainActivity;
+import edu.asu.remindmenow.activities.ReminderListViewLoader;
+import edu.asu.remindmenow.activities.SettingsActivity;
 import edu.asu.remindmenow.models.Reminder;
 
 /**
@@ -37,6 +39,8 @@ public class NotificationService {
                 break;
             case "Z": imageName=R.drawable.home_icon_1;
                 break;
+            case "W": imageName=R.drawable.weather;
+                break;
 
         }
 
@@ -56,7 +60,7 @@ public class NotificationService {
 
 
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(ctx);
-        stackBuilder.addParentStack(HomeActivity.class);
+        stackBuilder.addParentStack(ReminderListViewLoader.class);
 
         stackBuilder.addNextIntent(resultIntent);
         PendingIntent resultPendingIntent =

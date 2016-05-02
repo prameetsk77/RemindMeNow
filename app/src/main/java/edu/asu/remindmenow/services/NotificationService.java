@@ -12,8 +12,6 @@ import android.util.Log;
 import edu.asu.remindmenow.R;
 import edu.asu.remindmenow.activities.HomeActivity;
 import edu.asu.remindmenow.activities.MainActivity;
-import edu.asu.remindmenow.activities.ReminderListViewLoader;
-import edu.asu.remindmenow.activities.SettingsActivity;
 import edu.asu.remindmenow.models.Reminder;
 
 /**
@@ -60,7 +58,7 @@ public class NotificationService {
 
 
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(ctx);
-        stackBuilder.addParentStack(ReminderListViewLoader.class);
+        stackBuilder.addParentStack(HomeActivity.class);
 
         stackBuilder.addNextIntent(resultIntent);
         PendingIntent resultPendingIntent =
